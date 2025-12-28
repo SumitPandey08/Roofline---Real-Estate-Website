@@ -8,7 +8,7 @@ connect();
 
 export async function PUT(request: NextRequest, context: { params: { id: string } }) {
   try {
-    const { id } = await context.params;
+    const { id } = context.params;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return NextResponse.json({ message: "Invalid property ID" }, { status: 400 });
