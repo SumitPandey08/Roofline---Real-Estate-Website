@@ -52,6 +52,10 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: 'i.pravatar.cc',
+      },
+       {
+        protocol: 'https',
+        hostname: 'media.istockphoto.com',
       }
 
       // Add any other domains here...

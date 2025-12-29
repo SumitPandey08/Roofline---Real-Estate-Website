@@ -4,8 +4,10 @@
 import React, { useEffect, useState } from 'react';
 import ActivePropertyCard from '@/app/(frontend)/(ui)/components/admin/dashboard/ActivePropertyCard';
 import { PropertyCardData } from '@/app/(frontend)/(ui)/components/admin/dashboard/ActivePropertyCard'; // Assuming this interface is exported
+import { useAdmin } from '@/app/(frontend)/context/AdminContext'; // Import useAdmin
 
 const AdminPropertiesPage: React.FC = () => {
+  const { adminData, loading: adminLoading } = useAdmin(); // Use useAdmin hook
   const [allProperties, setAllProperties] = useState<PropertyCardData[]>([]);
   const [filteredProperties, setFilteredProperties] = useState<PropertyCardData[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -14,9 +16,11 @@ const AdminPropertiesPage: React.FC = () => {
 
   useEffect(() => {
     const fetchAdminProperties = async () => {
+      if (!adminData?._id) return; // Don't fetch if admin ID isn't available yet
+
       try {
         setLoading(true);
-        const response = await fetch('/api/property/add-property'); // Changed endpoint
+        const response = await fetch(`/api/property/get-admin-property?id=${adminData._id}`); // Corrected endpoint and added admin ID
         const data = await response.json();
 
         if (!response.ok) {
@@ -43,7 +47,7 @@ const AdminPropertiesPage: React.FC = () => {
     };
 
     fetchAdminProperties();
-  }, []);
+  }, [adminData]); // Added adminData to dependency array
 
   useEffect(() => {
     if (selectedType === 'all') {
@@ -82,7 +86,7 @@ const AdminPropertiesPage: React.FC = () => {
     }
   };
 
-  if (loading) {
+  if (loading || adminLoading) { // Added adminLoading to the check
     return (
       <div className="flex justify-center items-center h-full">
         <p className="text-gray-600">Loading properties...</p>

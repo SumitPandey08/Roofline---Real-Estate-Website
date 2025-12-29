@@ -5,7 +5,7 @@ import mongoose from "mongoose";
 
 connect();
 
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(request: NextRequest, { params }: { params: IParams }) {
     try {
         const awaitedParams = await params;
         const id = awaitedParams.id;
@@ -34,7 +34,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
     }
 }
 
-export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(request: NextRequest, { params }: { params: IParams}) {
     try {
         const { id } = await params;
         const body = await request.json();

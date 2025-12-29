@@ -40,11 +40,19 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: "Invalid verification code" }, { status: 400 });
         }
 
-        user.isVerified = true;
+        user.isPhoneVerified = true;
         user.phoneVerificationCode = undefined;
         await user.save();
 
-        return NextResponse.json({ message: "Phone number verified successfully" }, { status: 200 });
+        const response = NextResponse.json({ message: "Phone number verified successfully" }, { status: 200 });
+        response.cookies.set("phone-verified", phoneNo, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV !== "development",
+            maxAge: 60 * 15, // 15 minutes
+            sameSite: "strict",
+            path: "/",
+        });
+        return response;
     } catch (error) {
         console.error("Error in phone verification:", error);
         return NextResponse.json({ error: "Internal server error" }, { status: 500 });

@@ -18,6 +18,10 @@ export interface IAdmin extends Document {
     phoneVerificationCode?: string;
     emailVerified: boolean;
     emailVerificationCode?: string;
+    uploadCredit: number;
+    creditsLastReset: Date;
+    membership: "basic" | "advance" | "pro";
+
 }
 
 const adminSchema = new mongoose.Schema<IAdmin>(
@@ -90,6 +94,21 @@ const adminSchema = new mongoose.Schema<IAdmin>(
         },
         emailVerificationCode: {
             type: String,
+        },
+
+        // credit system
+        uploadCredit: {
+            type: Number,
+            default: 5
+        },
+        creditsLastReset: {
+            type: Date,
+            default: Date.now
+        },
+        membership: {
+            type: String,
+            enum: ["basic" , "advance" , "pro"],
+            default: "basic"
         }
     },
     {

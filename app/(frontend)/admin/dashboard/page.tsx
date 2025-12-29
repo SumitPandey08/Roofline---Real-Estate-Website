@@ -53,23 +53,29 @@ const DashboardPage: React.FC = () => {
   const [properties, setProperties] = useState<Property[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchProperties = async () => {
-      try {
-        const response = await fetch("/api/property/add-property");
-        const result = await response.json();
-        if (result.data) {
-          setProperties(result.data);
-        }
-      } catch (error) {
-        console.error("Failed to fetch properties", error);
-      } finally {
-        setLoading(false);
-      }
-    };
+useEffect(() => {
+  const fetchProperties = async () => {
+    if (!adminData?._id) return; // Don't fetch if ID isn't available yet
 
-    fetchProperties();
-  }, []);
+    try {
+      // 2. Append the ID to the URL as a dynamic segment
+      const response = await fetch(`/api/property/get-admin-property?id=${adminData._id}`);
+      const result = await response.json();
+      
+      if (result.success) {
+        setProperties(result.data);
+      } else {
+        console.error("API Error:", result.error);
+      }
+    } catch (error) {
+      console.error("Failed to fetch properties", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchProperties();
+}, [adminData]);
 
 
   // 1. Stats Data (Top Row)

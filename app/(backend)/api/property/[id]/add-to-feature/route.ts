@@ -6,7 +6,7 @@ import mongoose from "mongoose";
 connect();
 
 
-export async function PUT(request: NextRequest, context: { params: { id: string } }) {
+export async function PUT(request: NextRequest, context: { params: IParams}) {
   try {
     const { id } = context.params;
 

@@ -5,7 +5,7 @@ import mongoose from "mongoose";
 
 connect();
 
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(request: NextRequest, { params }: { params: IParams }) {
   try {
     const { id } = await params;
 

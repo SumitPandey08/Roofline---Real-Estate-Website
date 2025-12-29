@@ -44,6 +44,7 @@ const PropertyDetailsPage = () => {
 
 
         if (propData.images?.length > 0) setMainImage(propData.images[0]);
+        else setMainImage('https://media.istockphoto.com/id/1396814518/vector/image-coming-soon-no-photo-no-thumbnail-image-available-vector-illustration.jpg?s=612x612&w=0&k=20&c=hnh2OZgQGhf0b46-J2z7aHbIWwq8HNlSDaNp2wn_iko=')
       } catch (_error) {
         toast.error("Failed to load details");
       } finally {
@@ -133,7 +134,7 @@ const PropertyDetailsPage = () => {
                 
                 <p className="text-sm text-gray-400 font-medium mb-1">Listing Price</p>
                 <h2 className="text-4xl font-black text-gray-900 mb-6">
-                    ${property.price.toLocaleString()}
+                    {`₹${property.price.toLocaleString()}`}
                 </h2>
 
                 <div className="grid grid-cols-3 gap-2 border-y border-gray-50 py-6 mb-6">
