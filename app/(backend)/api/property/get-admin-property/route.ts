@@ -1,12 +1,11 @@
 import { NextResponse , NextRequest } from "next/server";
 import Property from "@/app/(backend)/models/property.model";
-import { connect } from "@/app/(backend)/dbConfig/dbConfig";
+import connect from "@/app/(backend)/dbConfig/dbConfig";
 import mongoose from "mongoose";
-
-connect();
 
 export async function GET(request: NextRequest) {
     try {
+        await connect();
         const id = request.nextUrl.searchParams.get('id');
 
         if (!id) {

@@ -1,8 +1,6 @@
 import User from "@/app/(backend)/models/user.model";
 import { NextResponse } from "next/server";
-import { connect } from '@/app/(backend)/dbConfig/dbConfig';
-
-connect();
+import connect from '@/app/(backend)/dbConfig/dbConfig';
 
 const verificationCodes = () => {
     const numArr = ['0' , '1', '2', '3', '4', '5', '6', '7', '8', '9'];
@@ -16,6 +14,7 @@ const verificationCodes = () => {
 
 export async function POST(request: Request) {
     try {
+        await connect();
         const { phoneNo, verificationCode } = await request.json();
         if (!phoneNo) {
             return NextResponse.json({ error: "Phone number is required" }, { status: 400 });

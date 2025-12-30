@@ -1,12 +1,15 @@
 import { NextResponse, NextRequest } from "next/server";
 import Property from "@/app/(backend)/models/property.model";
-import { connect } from "@/app/(backend)/dbConfig/dbConfig";
+import connect from "@/app/(backend)/dbConfig/dbConfig";
 import mongoose from "mongoose";
 
-connect();
+interface IParams {
+    id: string;
+}
 
 export async function GET(request: NextRequest, { params }: { params: IParams }) {
   try {
+    await connect();
     const { id } = await params;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -25,6 +28,7 @@ export async function GET(request: NextRequest, { params }: { params: IParams })
     });
   } catch (error:unknown) {
     console.error("Error fetching users for property:", error);
-    return NextResponse.json({ message: "Internal server error", error: error.message }, { status: 500 });
+    const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+    return NextResponse.json({ message: "Internal server error", error: errorMessage }, { status: 500 });
   }
 }

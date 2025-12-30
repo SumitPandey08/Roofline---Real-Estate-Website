@@ -4,6 +4,7 @@ import ImagesSlideShow from "@/app/(frontend)/(ui)/components/overview/ImagesSli
 import { HiOutlineMapPin, HiOutlineCurrencyRupee, HiOutlineCalendarDays } from "react-icons/hi2";
 import { FaWhatsapp } from "react-icons/fa";
 import { IProperty } from "@/app/(backend)/models/property.model";
+import AgentCard from "@/app/(frontend)/(ui)/components/overview/AgentCard";
 
 async function fetchProperty(id: string): Promise<IProperty | null> {
   const res = await fetch(`http://localhost:3000/api/property/${id}`, { cache: 'no-store' });
@@ -95,15 +96,19 @@ export default async function Page({ params }: { params: { id: string } }) {
         </section>
 
         {/* Detailed Info Cards */}
-        <div className="space-y-10">
-          <div className="bg-white rounded-3xl p-8 md:p-12 shadow-sm border border-slate-100 transition-all hover:shadow-md">
-            <Detail property={property} />
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="lg:col-span-2 bg-white rounded-3xl p-8 md:p-12 shadow-sm border border-slate-100 h-fit">
+             <Detail property={property} />
           </div>
+          <div className="lg:col-span-1">
+             <AgentCard agent={property.agent} />
+          </div>
+        </div>
 
 
 
-          {/* Benefits Section with Centered Heading */}
-          <section className="text-center space-y-10">
+        {/* Benefits Section with Centered Heading */}
+        <section className="text-center space-y-10 pt-8">
             <div className="space-y-2">
               <h2 className="text-4xl font-black text-slate-900 tracking-tight">Why Choose This Property?</h2>
               <p className="text-slate-500 max-w-lg mx-auto">Discover the unique advantages that make this project stand out in the current market.</p>
@@ -119,8 +124,7 @@ export default async function Page({ params }: { params: { id: string } }) {
                 </div>
               ))}
             </div>
-          </section>
-        </div>
+        </section>
 
         {/* Final Centered CTA */}
         <section className="bg-slate-900 rounded-[3rem] p-12 text-center text-white relative overflow-hidden">

@@ -156,7 +156,8 @@ const Navbar: React.FC<NavbarProps> = ({ child = false }) => {
             <Image
               src="/logo.webp"
               alt="Company Logo"
-              fill
+              width={150}
+              height={40}
               className="object-contain"
               priority
             />

@@ -1,12 +1,15 @@
-import { connect } from "@/app/(backend)/dbConfig/dbConfig";
+import connect from "@/app/(backend)/dbConfig/dbConfig";
 import { NextRequest, NextResponse } from "next/server";
 import Property from "@/app/(backend)/models/property.model";
 import mongoose from "mongoose";
 
-connect();
+interface IParams {
+    id: string;
+}
 
 export async function GET(request: NextRequest, { params }: { params: IParams }) {
     try {
+        await connect();
         const awaitedParams = await params;
         const id = awaitedParams.id;
 
@@ -36,6 +39,7 @@ export async function GET(request: NextRequest, { params }: { params: IParams })
 
 export async function PUT(request: NextRequest, { params }: { params: IParams}) {
     try {
+        await connect();
         const { id } = await params;
         const body = await request.json();
 

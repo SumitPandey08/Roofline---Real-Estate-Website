@@ -1,13 +1,15 @@
 import { NextResponse, NextRequest } from "next/server";
 import Property, { IProperty } from "@/app/(backend)/models/property.model";
-import { connect } from "@/app/(backend)/dbConfig/dbConfig";
+import connect from "@/app/(backend)/dbConfig/dbConfig";
 import mongoose from "mongoose";
 
-connect();
-
+interface IParams {
+    id: string;
+}
 
 export async function PUT(request: NextRequest, context: { params: IParams}) {
   try {
+    await connect();
     const { id } = context.params;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {

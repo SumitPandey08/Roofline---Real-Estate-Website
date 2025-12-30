@@ -1,11 +1,10 @@
 import User from '@/app/(backend)/models/user.model'
 import { NextResponse } from 'next/server';
-import { connect } from '@/app/(backend)/dbConfig/dbConfig';
-
-connect();
+import connect from '@/app/(backend)/dbConfig/dbConfig';
 
 export async function POST(request: Request) {
     try {
+        await connect();
         const { email, verificationCode } = await request.json();
         if (!email) {
             return NextResponse.json({ error: "Email is required" }, { status: 400 });

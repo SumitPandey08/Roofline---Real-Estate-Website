@@ -1,30 +1,24 @@
-import { connect } from "@/app/(backend)/dbConfig/dbConfig";
+import connect from "@/app/(backend)/dbConfig/dbConfig";
 import { NextRequest, NextResponse } from "next/server";
 import Property from "@/app/(backend)/models/property.model";
 import { getDataFromToken } from "@/app/(backend)/helpers/getDataFromToken";
-import Admin from "@/app/(backend)/models/admin.model";
-
-connect();
+import { ensureUserCredits } from "@/app/(backend)/helpers/creditChecker";
 
 export async function POST(request: NextRequest) {
     try {
+        await connect();
        const adminIdFromToken = await getDataFromToken(request);
         if (!adminIdFromToken) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
 
-        
-        const admin = await Admin.findById(adminIdFromToken);
-        if (!admin || admin.uploadCredit <= 0) {
-            return NextResponse.json({ error: "Insufficient credits" }, { status: 403 });
-        }
+        // 1. CHECK AND RENEW CREDITS FIRST (Lazy Renewal)
+        // This ensures the user has their monthly credits if due, before we check balance.
+        const admin = await ensureUserCredits(adminIdFromToken);
 
         // 2. Check if admin has enough credits
         if (admin.uploadCredit <= 0) {
-            return NextResponse.json(
-                { error: "Insufficient upload credits. Please top up." }, 
-                { status: 403 }
-            );
+            return NextResponse.json({ error: "Insufficient credits" }, { status: 403 });
         }
 
         const reqBody = await request.json();
@@ -58,7 +52,8 @@ export async function POST(request: NextRequest) {
 
 export async function GET() {
     try {
-        const properties = await Property.find();
+        await connect();
+        const properties = await Property.find().populate('agent');
         return NextResponse.json({
             message: "Properties found",
             success: true,

@@ -1,11 +1,15 @@
-import React from "react";
+'use client';
+
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import axios from "axios";
 import {
   IoLocationOutline,
   IoBedOutline,
   IoWaterOutline,
 } from "react-icons/io5";
+import { MdVerified } from "react-icons/md";
 import { IProperty } from "@/app/(backend)/models/property.model";
 
 interface CardProps {
@@ -13,6 +17,28 @@ interface CardProps {
 }
 
 const Card: React.FC<CardProps> = ({ data }) => {
+   const [agentData , setAgentData] = useState<any>(null);
+   
+   const fetchAgentData = async (agentId: string) => {
+     try {
+       const res = await axios.get(`/api/admin/get-admin-from-id/${agentId}`);
+       setAgentData(res.data.data);
+     } catch (error) {
+       console.error("Failed to fetch agent data", error);
+     }
+   }
+   
+   useEffect(() => {
+     if (data.agent) {
+       if (typeof data.agent === 'string') {
+         fetchAgentData(data.agent);
+       } else {
+         setAgentData(data.agent);
+       }
+     }
+   }, [data.agent]);
+
+
   const {
     _id,
     images,
@@ -57,10 +83,20 @@ const Card: React.FC<CardProps> = ({ data }) => {
           <h2 className="text-base font-semibold text-gray-900 line-clamp-2">
             {title}
           </h2>
-          {agent && (
-            <p className="text-xs text-gray-400 mt-0.5">
-              by <span className="font-medium">{typeof agent === 'string' ? agent : (agent as any).name}</span>
-            </p>
+      {agentData && (
+            <div className="flex items-center gap-1 mt-0.5">
+              <p className="text-xs text-gray-400">
+            by <span className="font-medium text-gray-700">{agentData.name}</span>
+              </p>
+          {agentData.membership === 'pro' && (
+                <span className="flex items-center gap-0.5 px-1.5 py-0.5 bg-amber-100 text-amber-700 rounded text-[10px] font-bold leading-none">
+                  PRO <MdVerified size={10} />
+                </span>
+              )}
+          {agentData.membership === 'advance' && (
+                <MdVerified className="text-blue-500" size={14} title="Verified Agent" />
+              )}
+            </div>
           )}
         </div>
 

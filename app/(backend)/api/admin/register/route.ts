@@ -1,4 +1,4 @@
-import { connect } from '@/app/(backend)/dbConfig/dbConfig';
+import connect from '@/app/(backend)/dbConfig/dbConfig';
 import Admin from '@/app/(backend)/models/admin.model';
 import { NextResponse, NextRequest } from 'next/server';
 import bcrypt from 'bcryptjs';
@@ -6,10 +6,9 @@ import { writeFile } from 'fs/promises';
 import { join } from 'path';
 import { uploadOnCloudinary } from '@/app/(backend)/helpers/cloudinary';
 
-connect();
-
 export async function POST(request: NextRequest) {
     try {
+        await connect();
         const phoneNo = request.cookies.get('phone-verified')?.value;
 
         if (!phoneNo) {

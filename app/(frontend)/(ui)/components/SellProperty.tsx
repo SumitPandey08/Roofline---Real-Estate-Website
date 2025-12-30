@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 
 const SellProperty: React.FC = () => {
   const backgroundPatternUrl =
@@ -45,7 +46,7 @@ const SellProperty: React.FC = () => {
             transition
           "
         >
-          Sell Your Property
+          <Link href="/auth/admin/phone-verify">Sell Your Property</Link>
         </button>
       </div>
     </section>

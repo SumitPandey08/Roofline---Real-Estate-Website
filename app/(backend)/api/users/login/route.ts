@@ -1,13 +1,12 @@
-import { connect } from '@/app/(backend)/dbConfig/dbConfig';
+import connect from '@/app/(backend)/dbConfig/dbConfig';
 import User from '@/app/(backend)/models/user.model';
 import { NextRequest, NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
-connect();
-
 export async function POST(request: NextRequest) {
     try {
+        await connect();
         const { email, phoneNo, password } = await request.json();
 
         if ((!email && !phoneNo) || !password) {

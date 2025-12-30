@@ -1,12 +1,11 @@
 import User from '@/app/(backend)/models/user.model';
 import { NextResponse , NextRequest } from 'next/server';
-import { connect } from '@/app/(backend)/dbConfig/dbConfig';
+import connect from '@/app/(backend)/dbConfig/dbConfig';
 import bcrypt from 'bcryptjs';
-
-connect() ;
 
 export async function POST(request: NextRequest) {
     try {
+        await connect();
         const body = request.json() ;
         const { username, email, password, phoneNo } = await body;
         console.log("Received data:", { username, email, password, phoneNo });

@@ -21,6 +21,7 @@ export interface IAdmin extends Document {
     uploadCredit: number;
     creditsLastReset: Date;
     membership: "basic" | "advance" | "pro";
+    membershipLastDate: Date;
 
 }
 
@@ -109,6 +110,14 @@ const adminSchema = new mongoose.Schema<IAdmin>(
             type: String,
             enum: ["basic" , "advance" , "pro"],
             default: "basic"
+        },
+       membershipLastDate: {
+            type: Date,
+            default: () => {
+                const date = new Date();
+                date.setMonth(date.getMonth() + 1); // Adds exactly 1 month
+                return date;
+            }
         }
     },
     {

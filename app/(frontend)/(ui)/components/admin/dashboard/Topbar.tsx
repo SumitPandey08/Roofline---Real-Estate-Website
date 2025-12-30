@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { MdSearch, MdNotificationsNone, MdOutlineChatBubbleOutline, MdKeyboardArrowDown, MdPerson, MdLogout } from 'react-icons/md';
+import { MdSearch, MdNotificationsNone, MdOutlineChatBubbleOutline, MdKeyboardArrowDown, MdPerson, MdLogout, MdVerified, MdWorkspacePremium } from 'react-icons/md';
 
 import { useAdmin } from '@/app/(frontend)/context/AdminContext';
 
@@ -58,10 +58,22 @@ const Topbar: React.FC = () => {
                         {adminData ? (
                             <>
                                 <div className="text-right hidden md:block">
-                                    <p className="text-sm font-bold text-slate-700 leading-tight">{adminData.name}</p>
-                                    <p className="text-xs text-slate-400 uppercase tracking-tighter">{adminData.role || 'Admin'}</p>
+                                    <div className="flex items-center justify-end gap-1">
+                                        <p className="text-sm font-bold text-slate-700 leading-tight">{adminData.name}</p>
+                                        {(adminData.membership === 'pro' || adminData.membership === 'advance') && (
+                                            <MdVerified className="text-blue-500" size={16} title="Verified Agent" />
+                                        )}
+                                    </div>
+                                    <div className="flex items-center justify-end gap-1">
+                                        <p className="text-xs text-slate-400 uppercase tracking-tighter">{adminData.role || 'Admin'}</p>
+                                        {adminData.membership === 'pro' && (
+                                            <span className="flex items-center gap-0.5 px-1.5 py-0.5 bg-amber-100 text-amber-700 rounded text-[10px] font-bold leading-none ml-1">
+                                                PRO
+                                            </span>
+                                        )}
+                                    </div>
                                 </div>
-                                <div className="relative w-10 h-10 rounded-full border-2 border-purple-100 overflow-hidden group-hover:border-purple-400 transition-colors">
+                                <div className={`relative w-10 h-10 rounded-full border-2 overflow-hidden transition-colors ${adminData.membership === 'pro' ? 'border-amber-400 ring-2 ring-amber-100' : adminData.membership === 'advance' ? 'border-blue-400' : 'border-purple-100 group-hover:border-purple-400'}`}>
                                     {adminData.profilePhoto ? (
                                         <Image src={adminData.profilePhoto} alt="User Profile" fill className="object-cover" />
                                     ) : (

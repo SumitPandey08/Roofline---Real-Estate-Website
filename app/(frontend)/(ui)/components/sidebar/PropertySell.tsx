@@ -8,6 +8,7 @@
 import Image from 'next/image';
 
 import React from 'react';
+import Link from 'next/link';
 
 
 
@@ -60,10 +61,10 @@ const PropertySell: React.FC = () => {
         </p>
 
 
-
+      
         <button className="w-full mt-4 px-4 py-3 bg-gradient-to-r from-[#f1ba5b] to-[#e8a84a] text-white font-semibold rounded-lg hover:shadow-lg hover:scale-105 transition-all duration-300 active:scale-95">
 
-          Post a Property
+          <Link href="/auth/admin/phone-verify">Post a Property</Link>
 
         </button>
 
