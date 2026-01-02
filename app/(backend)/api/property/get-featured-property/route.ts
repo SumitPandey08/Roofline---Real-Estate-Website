@@ -6,7 +6,7 @@ import mongoose from "mongoose";
 export async function GET( response: NextResponse) {
   try {
        await connect();
-       const featuredProperties = await Property.find({ "featured.isFeatured": true }).sort({ "featured.priority": -1 });
+       const featuredProperties = await Property.find({ "featured.isFeatured": true }).populate('agent', 'name membership').sort({ "featured.priority": -1 });
         return NextResponse.json({
             message: "Featured properties found",
             success: true,

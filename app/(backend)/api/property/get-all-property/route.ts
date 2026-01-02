@@ -16,7 +16,7 @@ export async function GET(request: NextRequest) {
             query.listingType = listingType;
         }
 
-        const properties = await Property.find(query);
+        const properties = await Property.find(query).populate('agent', 'name membership');
 
         return NextResponse.json({
             message: "Properties fetched successfully",

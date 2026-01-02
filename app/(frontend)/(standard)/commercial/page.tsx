@@ -2,7 +2,7 @@ import React from "react";
 import Card from "@/app/(frontend)/(ui)/components/highdemand/Card";
 import SellProperty from "@/app/(frontend)/(ui)/components/SellProperty";
 import ResearchInsight from "@/app/(frontend)/(ui)/components/Research&Insight";
-import { sellers } from "@/app/(frontend)/(data)/Sellers";
+
 import Seller from "@/app/(frontend)/(ui)/components/Seller";
 import { IProperty } from "@/app/(backend)/models/property.model";
 
@@ -91,21 +91,7 @@ const Commercial: React.FC = async () => {
           </button>
         </div>
 
-        {/* Horizontal Sellers List */}
-        <div
-          className="
-                      flex gap-4
-                      overflow-x-auto
-                      pb-2
-                      scrollbar-hide
-                    "
-        >
-          {sellers.map((seller) => (
-            <div key={seller.id} className="min-w-[280px]">
-              <Seller data={seller} />
-            </div>
-          ))}
-        </div>
+        <Seller />
       </section>
 
       <SellProperty />

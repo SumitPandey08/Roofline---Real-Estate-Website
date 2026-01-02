@@ -190,7 +190,7 @@ const UserProfile: React.FC = () => {
                         value={user.savedProperties.length} 
                         color="text-blue-600" 
                         bg="bg-blue-50"
-                        link="/user/saved" 
+                        link="/user/save-property" 
                         emptyAction="Start Searching"
                     />
                     
@@ -235,7 +235,7 @@ const UserProfile: React.FC = () => {
                             <p className="text-gray-400 text-sm">You haven't saved any properties yet. Start exploring now!</p>
                         </div>
                         <button 
-                            onClick={() => router.push('/properties')}
+                            onClick={() => router.push('/buy')}
                             className="bg-white text-gray-900 px-6 py-2 rounded-full font-bold hover:bg-gray-100 transition active:scale-95 whitespace-nowrap"
                         >
                             Browse Properties

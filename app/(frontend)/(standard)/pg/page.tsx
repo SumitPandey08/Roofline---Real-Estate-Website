@@ -72,6 +72,13 @@ const PG: React.FC = async () => {
       image:
         "https://c.housingcdn.com/demand/s/client/common/assets/yourLife.d015d745.png",
     },
+    {
+      id: "featured-agents",
+      title: "Featured Agents",
+      description: "Pro and Advance members are featured on our platform, increasing their visibility.",
+      image:
+        "https://c.housingcdn.com/demand/s/client/common/assets/stressFreeSearch.803f8c7e.png",
+    },
   ];
 
   const handpickCollections: HandpickCollection[] = [

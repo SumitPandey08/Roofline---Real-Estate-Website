@@ -2,7 +2,7 @@ import React from "react";
 import Image from "next/image";
 import Card from "@/app/(frontend)/(ui)/components/highdemand/Card";
 import Seller from "@/app/(frontend)/(ui)/components/Seller";
-import { sellers } from "@/app/(frontend)/(data)/Sellers";
+
 import { IProperty } from "@/app/(backend)/models/property.model";
 
 async function fetchFeaturedProperties(baseUrl: string): Promise<IProperty[]> {
@@ -135,13 +135,7 @@ const Plot: React.FC = async () => {
             View all
           </button>
         </div>
-        <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide">
-          {sellers.map((seller) => (
-            <div key={seller.id} className="min-w-[280px]">
-              <Seller data={seller} />
-            </div>
-          ))}
-        </div>
+        <Seller />
       </section>
     </div>
   );
