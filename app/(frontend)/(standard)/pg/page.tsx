@@ -2,6 +2,7 @@ import React from "react";
 import BenefitCard from "@/app/(frontend)/(ui)/components/BeneifitCard";
 import Card from "@/app/(frontend)/(ui)/components/highdemand/Card";
 import { IProperty } from "@/app/(backend)/models/property.model";
+import { headers } from "next/headers";
 
 interface Benefit {
   id: string;
@@ -15,8 +16,8 @@ interface HandpickCollection {
   image: string;
 }
 
-async function fetchFeaturedProperties(): Promise<IProperty[]> {
-  const res = await fetch(`http://localhost:3000/api/property/get-featured-property`, { cache: 'no-store' });
+async function fetchFeaturedProperties(baseUrl: string): Promise<IProperty[]> {
+  const res = await fetch(`${baseUrl}/api/property/get-featured-property`, { cache: 'no-store' });
   if (!res.ok) {
     throw new Error('Failed to fetch featured properties');
   }
@@ -24,8 +25,8 @@ async function fetchFeaturedProperties(): Promise<IProperty[]> {
   return result.data;
 }
 
-async function fetchProperties(): Promise<IProperty[]> {
-  const res = await fetch(`http://localhost:3000/api/property/add-property?propertyType=pg`, { cache: 'no-store' });
+async function fetchProperties(baseUrl: string): Promise<IProperty[]> {
+  const res = await fetch(`${baseUrl}/api/property/get-all-property?propertyType=pg`, { cache: 'no-store' });
   if (!res.ok) {
     throw new Error('Failed to fetch properties');
   }
@@ -34,8 +35,10 @@ async function fetchProperties(): Promise<IProperty[]> {
 }
 
 const PG: React.FC = async () => {
-  const properties = await fetchProperties();
-  const featuredProperties = await fetchFeaturedProperties();
+
+
+  const properties = await fetchProperties(`${process.env.NEXT_PUBLIC_API_URL}`);
+  const featuredProperties = await fetchFeaturedProperties(`${process.env.NEXT_PUBLIC_API_URL}`);
 
   const pgFeaturedProperties = featuredProperties.filter(p => p.propertyType === 'pg');
 

@@ -1,5 +1,8 @@
 import mongoose, { Document, Model, Schema } from "mongoose";
-import { IAdmin } from "./admin.model";
+
+// 🔥 IMPORTANT: REGISTER REFERENCED MODELS
+import "./user.model";   // registers "User"
+import "./admin.model";  // registers "Admin"
 
 export interface IProperty extends Document {
   title: string;
@@ -36,33 +39,51 @@ export interface IProperty extends Document {
   area: number;
   areaUnit: "sqft" | "sqm";
   isFurnished: boolean;
-  yearBuilt: number;
+  yearBuilt?: number;
   virtualTourUrl?: string;
 
   amenities: string[];
 
   status: "available" | "sold" | "rented" | "pending" | "inactive";
 
-  agent: IAdmin;
-  savedBy: mongoose.Schema.Types.ObjectId[];
-  seenBy: mongoose.Schema.Types.ObjectId[];
+  agent: mongoose.Types.ObjectId;
+  savedBy: mongoose.Types.ObjectId[];
+  seenBy: mongoose.Types.ObjectId[];
 
-  // 🔥 FEATURED SYSTEM
   featured: {
     isFeatured: boolean;
-    priority: number; // Higher = shown first
+    priority: number;
     featuredFrom?: Date;
     featuredTill?: Date;
     reason?: "admin" | "paid" | "promotion";
     views?: number;
   };
+
+  createdAt: Date;
+  updatedAt: Date;
 }
+
+/* ============================
+   PROPERTY SCHEMA
+============================ */
 
 const propertySchema = new Schema<IProperty>(
   {
-    title: { type: String, required: true, trim: true },
-    images: [{ type: String }],
-    description: { type: String, required: true },
+    title: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+
+    images: {
+      type: [String],
+      default: [],
+    },
+
+    description: {
+      type: String,
+      required: true,
+    },
 
     listingType: {
       type: String,
@@ -70,7 +91,11 @@ const propertySchema = new Schema<IProperty>(
       required: true,
     },
 
-    price: { type: Number, required: true, min: 0 },
+    price: {
+      type: Number,
+      required: true,
+      min: 0,
+    },
 
     pricePeriod: {
       type: String,
@@ -86,26 +111,65 @@ const propertySchema = new Schema<IProperty>(
       state: { type: String, required: true },
       zipCode: { type: String, required: true },
       location: {
-        type: { type: String, enum: ["Point"], default: "Point" },
-        coordinates: { type: [Number], required: true },
+        type: {
+          type: String,
+          enum: ["Point"],
+          default: "Point",
+        },
+        coordinates: {
+          type: [Number], // [lng, lat]
+          required: true,
+        },
       },
     },
 
     propertyType: {
       type: String,
-      enum: ["apartment", "house", "condo", "land", "commercial", "office", "pg", "plot"],
+      enum: [
+        "apartment",
+        "house",
+        "condo",
+        "land",
+        "commercial",
+        "office",
+        "pg",
+        "plot",
+      ],
       required: true,
     },
 
     bedrooms: { type: Number, min: 0 },
     bathrooms: { type: Number, min: 0 },
-    area: { type: Number, required: true },
-    areaUnit: { type: String, enum: ["sqft", "sqm"], default: "sqft" },
-    isFurnished: { type: Boolean, default: false },
-    yearBuilt: { type: Number },
-    virtualTourUrl: { type: String },
 
-    amenities: [{ type: String }],
+    area: {
+      type: Number,
+      required: true,
+      min: 0,
+    },
+
+    areaUnit: {
+      type: String,
+      enum: ["sqft", "sqm"],
+      default: "sqft",
+    },
+
+    isFurnished: {
+      type: Boolean,
+      default: false,
+    },
+
+    yearBuilt: {
+      type: Number,
+    },
+
+    virtualTourUrl: {
+      type: String,
+    },
+
+    amenities: {
+      type: [String],
+      default: [],
+    },
 
     status: {
       type: String,
@@ -113,11 +177,26 @@ const propertySchema = new Schema<IProperty>(
       default: "available",
     },
 
-    agent: { type: Schema.Types.ObjectId, ref: "Admin", required: true },
-    savedBy: [{ type: Schema.Types.ObjectId, ref: "User" }],
-    seenBy: [{ type: Schema.Types.ObjectId, ref: "User" }],
+    agent: {
+      type: Schema.Types.ObjectId,
+      ref: "Admin",
+      required: true,
+    },
 
-    // ⭐ FEATURED OBJECT
+    savedBy: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
+
+    seenBy: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
+
     featured: {
       isFeatured: { type: Boolean, default: false },
       priority: { type: Number, default: 0 },
@@ -130,14 +209,27 @@ const propertySchema = new Schema<IProperty>(
       views: { type: Number, default: 0 },
     },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+  }
 );
 
-// 🌍 GEO INDEX
+/* ============================
+   INDEXES
+============================ */
+
+// 🌍 GEO SEARCH
 propertySchema.index({ "address.location": "2dsphere" });
 
-// 🚀 FAST HOMEPAGE QUERY
-propertySchema.index({ "featured.isFeatured": 1, "featured.priority": -1 });
+// 🚀 FEATURED SORTING
+propertySchema.index({
+  "featured.isFeatured": 1,
+  "featured.priority": -1,
+});
+
+/* ============================
+   MODEL EXPORT
+============================ */
 
 const Property: Model<IProperty> =
   mongoose.models.Property ||

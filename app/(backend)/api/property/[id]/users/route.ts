@@ -1,34 +1,47 @@
-import { NextResponse, NextRequest } from "next/server";
-import Property from "@/app/(backend)/models/property.model";
 import connect from "@/app/(backend)/dbConfig/dbConfig";
+import Property from "@/app/(backend)/models/property.model";
+import User from "@/app/(backend)/models/user.model"; // ✅ REQUIRED
+import { NextRequest, NextResponse } from "next/server";
 import mongoose from "mongoose";
 
-interface IParams {
-    id: string;
-}
-
-export async function GET(request: NextRequest, { params }: { params: IParams }) {
+export async function GET(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
     await connect();
+
     const { id } = await params;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
-      return NextResponse.json({ message: "Invalid property ID" }, { status: 400 });
+      return NextResponse.json(
+        { error: "Invalid property ID" },
+        { status: 400 }
+      );
     }
 
-    const property = await Property.findById(id).populate("savedBy").populate("seenBy");
+    const property = await Property.findById(id)
+      .populate("savedBy", "username email")
+      .populate("seenBy", "username email")
+      .lean();
 
     if (!property) {
-      return NextResponse.json({ message: "Property not found" }, { status: 404 });
+      return NextResponse.json(
+        { message: "Property not found" },
+        { status: 404 }
+      );
     }
 
     return NextResponse.json({
-      savedBy: property.savedBy,
-      seenBy: property.seenBy,
+      savedBy: property.savedBy ?? [],
+      seenBy: property.seenBy ?? [],
     });
-  } catch (error:unknown) {
-    console.error("Error fetching users for property:", error);
-    const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
-    return NextResponse.json({ message: "Internal server error", error: errorMessage }, { status: 500 });
+  } catch (error) {
+    console.error("API /property/[id]/users error:", error);
+
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 }
+    );
   }
 }

@@ -50,17 +50,3 @@ export async function POST(request: NextRequest) {
     }
 }
 
-export async function GET() {
-    try {
-        await connect();
-        const properties = await Property.find().populate('agent');
-        return NextResponse.json({
-            message: "Properties found",
-            success: true,
-            data: properties,
-        });
-    } catch (error: unknown) {
-        const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
-        return NextResponse.json({ error: errorMessage }, { status: 500 });
-    }
-}

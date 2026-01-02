@@ -1,18 +1,14 @@
 import Navbar from "../(ui)/components/Navbar";
 import Footer from "../(ui)/components/Footer";
-import Hero from "../(ui)/components/Hero";
-import Articles from "../(ui)/components/Articles";
 import { UserProvider } from "../context/UserContext";
 
 
-export default function StandardLayout({ children }: { children: React.ReactNode}) {
+export default function UserLayout({ children }: { children: React.ReactNode}) {
   return (
     <UserProvider>
       <div>
         <Navbar />
-        <Hero/>
         <main>{children}</main>
-        <Articles />
         <Footer />
       </div>
     </UserProvider>

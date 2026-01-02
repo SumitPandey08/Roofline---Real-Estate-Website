@@ -86,7 +86,7 @@ const AccountStatus: React.FC = () => {
         );
     }
 
-    const profileLink = user?.role === 'user' ? '/profile' : '/admin/dashboard';
+    const profileLink = user?.role === 'user' ? '/user/profile' : '/admin/dashboard';
     const displayName = user ? ('username' in user ? user.username : user.name) : '';
     const image = user?.image? user.image : 'https://images.unsplash.com/photo-1695927621677-ec96e048dce2?q=80&w=435&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
 

@@ -5,8 +5,8 @@ import Seller from "@/app/(frontend)/(ui)/components/Seller";
 import { sellers } from "@/app/(frontend)/(data)/Sellers";
 import { IProperty } from "@/app/(backend)/models/property.model";
 
-async function fetchFeaturedProperties(): Promise<IProperty[]> {
-  const res = await fetch(`http://localhost:3000/api/property/get-featured-property`, { cache: 'no-store' });
+async function fetchFeaturedProperties(baseUrl: string): Promise<IProperty[]> {
+  const res = await fetch(`${baseUrl}/api/property/get-featured-property`, { cache: 'no-store' });
   if (!res.ok) {
     throw new Error('Failed to fetch featured properties');
   }
@@ -14,8 +14,8 @@ async function fetchFeaturedProperties(): Promise<IProperty[]> {
   return result.data;
 }
 
-async function fetchProperties(): Promise<IProperty[]> {
-  const res = await fetch(`http://localhost:3000/api/property/add-property?propertyType=land`, { cache: 'no-store' });
+async function fetchProperties(baseUrl: string): Promise<IProperty[]> {
+  const res = await fetch(`${baseUrl}/api/property/get-all-property?propertyType=land`, { cache: 'no-store' });
   if (!res.ok) {
     throw new Error('Failed to fetch properties');
   }
@@ -60,8 +60,10 @@ const plotTypes: PlotType[] = [
 /* ---------------- PAGE ---------------- */
 
 const Plot: React.FC = async () => {
-  const properties = await fetchProperties();
-  const featuredProperties = await fetchFeaturedProperties();
+  const baseUrl = `${process.env.NEXT_PUBLIC_API_URL}`;
+
+  const properties = await fetchProperties(baseUrl);
+  const featuredProperties = await fetchFeaturedProperties(baseUrl);
 
   const plotFeaturedProperties = featuredProperties.filter(p => p.propertyType === 'plot');
 

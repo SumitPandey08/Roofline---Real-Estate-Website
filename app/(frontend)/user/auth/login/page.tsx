@@ -44,7 +44,7 @@ const LoginPage = () => {
                 throw new Error(data.message || 'Login failed');
             }
 
-            router.push('/profile'); // Redirect to user profile on success
+            router.push('/'); // Redirect to user profile on success
 
         } catch (err: any) {
             setError(err.message);

@@ -7,7 +7,7 @@ import mongoose from 'mongoose';
 export async function GET(request: NextRequest) {
     try {
         await connect();
-        const userId = await getDataFromToken(request);
+        const userId = getDataFromToken(request);
         if (!userId) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }

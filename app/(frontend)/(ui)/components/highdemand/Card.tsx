@@ -1,9 +1,8 @@
 'use client';
 
-import React, { useState, useEffect } from "react";
+import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import axios from "axios";
 import {
   IoLocationOutline,
   IoBedOutline,
@@ -11,39 +10,19 @@ import {
 } from "react-icons/io5";
 import { MdVerified } from "react-icons/md";
 import { IProperty } from "@/app/(backend)/models/property.model";
+import { useAgentData } from "@/app/(frontend)/hooks/useAgentData";
 
 interface CardProps {
   data: IProperty;
 }
 
 const Card: React.FC<CardProps> = ({ data }) => {
-   const [agentData , setAgentData] = useState<any>(null);
-   
-   const fetchAgentData = async (agentId: string) => {
-     try {
-       const res = await axios.get(`/api/admin/get-admin-from-id/${agentId}`);
-       setAgentData(res.data.data);
-     } catch (error) {
-       console.error("Failed to fetch agent data", error);
-     }
-   }
-   
-   useEffect(() => {
-     if (data.agent) {
-       if (typeof data.agent === 'string') {
-         fetchAgentData(data.agent);
-       } else {
-         setAgentData(data.agent);
-       }
-     }
-   }, [data.agent]);
-
+  const agentData = useAgentData(data.agent);
 
   const {
     _id,
     images,
     title,
-    agent,
     propertyType,
     address,
     price,

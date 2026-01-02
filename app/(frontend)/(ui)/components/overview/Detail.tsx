@@ -74,30 +74,21 @@ const Detail: React.FC<DetailProps> = ({ property }) => {
                 ))}
             </div>
 
-            <div className="mt-4">
-              <h3 className="font-medium text-gray-800">Amenities</h3>
-              <ul className="grid grid-cols-2 gap-2 mt-2 text-sm text-gray-600">
-                {property.amenities.map((amenity) => (
-                  <li key={amenity} className="flex items-center gap-2">
-                    <svg
-                      className="w-4 h-4 text-green-500"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M5 13l4 4L19 7"
-                      />
-                    </svg>
-                    {amenity}
-                  </li>
-                ))}
-              </ul>
-            </div>
+        <ul className="grid grid-cols-2 gap-2 mt-2 text-sm text-gray-600">
+  {(property.amenities ?? []).map((amenity) => (
+    <li key={amenity} className="flex items-center gap-2">
+      <svg
+        className="w-4 h-4 text-green-500"
+        fill="currentColor"
+        viewBox="0 0 20 20"
+      >
+        <path d="M16.707 5.293a1 1 0 00-1.414 0L8 12.586 4.707 9.293a1 1 0 00-1.414 1.414l4 4a1 1 0 001.414 0l8-8a1 1 0 000-1.414z" />
+      </svg>
+      {amenity}
+    </li>
+  ))}
+</ul>
+
 
             <div className="mt-4 text-sm text-gray-700 space-y-1">
               {property.agent && (
