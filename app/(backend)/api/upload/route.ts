@@ -10,6 +10,10 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error }, { status: 400 });
     }
 
+    if (!files) {
+      return NextResponse.json({ error: "No files uploaded" }, { status: 400 });
+    }
+
     const urls = [];
     for (const filePath of files) {
       const result = await uploadOnCloudinary(filePath);

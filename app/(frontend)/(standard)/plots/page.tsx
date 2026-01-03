@@ -103,7 +103,7 @@ const Plot: React.FC = async () => {
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
             {plotFeaturedProperties.map((property) => (
-              <Card key={property._id} data={property} />
+              <Card key={property._id.toString()} data={property} />
             ))}
           </div>
         </section>
@@ -120,7 +120,7 @@ const Plot: React.FC = async () => {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
         {properties.map((property, index) => (
-            <Card key={index} data={property} />
+            <Card key={property._id.toString()} data={property} />
           ))}
         </div>
       </section>

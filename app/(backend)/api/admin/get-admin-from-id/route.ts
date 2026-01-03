@@ -3,14 +3,11 @@ import { NextRequest, NextResponse } from "next/server";
 import Admin from "@/app/(backend)/models/admin.model";
 import mongoose from "mongoose";
 
-interface IParams {
-    id: string;
-}
 
-export async function GET(request: NextRequest, context: { params: IParams}) {
+export async function GET(request: NextRequest, context: { params: Promise<any> }) {
   try {
     await connect();
-    const { id } = context.params;
+    const { id } = await context.params;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return NextResponse.json({ message: "Invalid property ID" }, { status: 400 });

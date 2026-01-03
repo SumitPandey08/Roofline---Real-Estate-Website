@@ -23,7 +23,7 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: "Invalid verification code" }, { status: 400 });
         }
 
-        user.isVerified = true;
+        user.isEmailVerified = true;
         user.emailVerificationCode = undefined;
         await user.save();
 

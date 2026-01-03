@@ -3,9 +3,19 @@
 import React, { useState, useEffect } from 'react';
 import { MdCloudUpload, MdDescription, MdTitle, MdBusiness } from 'react-icons/md';
 
+interface PropertyOption {
+    id: string;
+    title: string;
+}
+
 const AddDocumentPage = () => {
-    const [properties, setProperties] = useState([]);
-    const [formData, setFormData] = useState({
+    const [properties, setProperties] = useState<PropertyOption[]>([]);
+    const [formData, setFormData] = useState<{
+        title: string;
+        description: string;
+        propertyId: string;
+        file: File | null;
+    }>({
         title: '',
         description: '',
         propertyId: '',

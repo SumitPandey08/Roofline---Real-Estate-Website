@@ -1,9 +1,9 @@
 import Hero from "../(ui)/components/Hero";
 import Footer from "../(ui)/components/Footer";
 import Navbar from "../(ui)/components/Navbar";
-import { UserProvider } from "../../context/UserContext";
+import { UserProvider } from "../context/UserContext";
 
-export default function MarketingLayout({ children }) {
+export default function MarketingLayout({ children }: { children: React.ReactNode }) {
   return (
     <div>
       <UserProvider>

@@ -61,7 +61,7 @@ const Card: React.FC<CardProps> = ({ data }) => {
             {title}
           </h2>
 
-          {agent && (
+          {agent && typeof agent === 'object' && 'name' in agent && (
             <div className="flex items-center gap-1.5 mt-1 text-xs">
               <span className="text-slate-400">
                 by{" "}

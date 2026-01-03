@@ -22,7 +22,7 @@ const ActivePropertyCard: React.FC<ActivePropertyCardProps> = ({ data, onFeature
     const handleFeatureClick = (e: React.MouseEvent) => {
         e.preventDefault();
         e.stopPropagation();
-        onFeatureToggle(_id, !featured?.isFeatured);
+        onFeatureToggle(_id.toString(), !featured?.isFeatured);
     };
 
     return (
@@ -62,13 +62,13 @@ const ActivePropertyCard: React.FC<ActivePropertyCardProps> = ({ data, onFeature
                 </Link>
                 
                 <div className="flex items-center gap-3 text-slate-500 text-xs">
-                    {data.bedrooms > 0 && (
+                    {(data.bedrooms ?? 0) > 0 && (
                         <div className="flex items-center gap-1">
                             <MdPeople size={14} />
                             <span>{data.bedrooms} Beds</span>
                         </div>
                     )}
-                    {data.bathrooms > 0 && (
+                    {(data.bathrooms ?? 0) > 0 && (
                         <div className="flex items-center gap-1">
                             <MdBathroom size={14} />
                             <span>{data.bathrooms} Baths</span>

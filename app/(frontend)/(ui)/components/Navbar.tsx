@@ -1,13 +1,14 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import Link from "next/link";
 import Image from "next/image";
 import RightBar from "./RightBar";
 
 /* ---------------- INTERFACES ---------------- */
 interface NavOption {
   section: string;
-  items: string[];
+  items: { name: string; href?: string }[];
 }
 
 interface CenterNavItem {
@@ -23,29 +24,29 @@ const centerNav: CenterNavItem[] = [
   {
     title: "For Buyers",
     options: [
-      { section: "Search", items: ["Buy Residential", "Buy Commercial", "New Projects", "Explore Localities"] },
-      { section: "Guidance", items: ["Legal Services", "Buyer Guide", "EMI Calculator"] },
+      { section: "Search", items: [{ name: "Buy Residential", href: "/buy" }, { name: "Buy Commercial", href: "/commercial" }, { name: "New Projects" }, { name: "Explore Localities" }] },
+      { section: "Guidance", items: [{ name: "Legal Services" }, { name: "Buyer Guide" }, { name: "EMI Calculator", href: "/services/emi-calculator" }] },
     ],
   },
   {
     title: "For Tenants",
     options: [
-      { section: "Rentals", items: ["Find Rental Property", "PG & Co-living", "Short-term Rentals"] },
-      { section: "Documentation", items: ["Rent Agreement", "Rent Receipt Generator"] },
+      { section: "Rentals", items: [{ name: "Find Rental Property", href: "/rent" }, { name: "PG & Co-living", href: "/pg" }, { name: "Short-term Rentals" }] },
+      { section: "Documentation", items: [{ name: "Rent Agreement" }, { name: "Rent Receipt Generator" }] },
     ],
   },
   {
     title: "For Sellers",
     options: [
-      { section: "List Property", items: ["Post Property Free", "Seller Plans & Pricing"] },
-      { section: "Tools", items: ["Property Value Calculator", "Seller Guide", "Real Estate Trends"] },
+      { section: "List Property", items: [{ name: "Post Property Free", href: "/admin/add-property" }, { name: "Seller Plans & Pricing" }] },
+      { section: "Tools", items: [{ name: "Property Value Calculator" }, { name: "Seller Guide" }, { name: "Real Estate Trends" }] },
     ],
   },
   {
     title: "Services",
     options: [
-      { section: "Housing Edge", items: ["Home Loan", "Housing Protect", "Housing Premium"] },
-      { section: "Tools", items: ["EMI Calculator", "Property Value Calculator", "Rent Receipt Generator"] },
+      { section: "Housing Edge", items: [{ name: "Home Loan" }, { name: "Housing Protect" }, { name: "Housing Premium" }] },
+      { section: "Tools", items: [{ name: "EMI Calculator", href: "/services/emi-calculator" }, { name: "Property Value Calculator" }, { name: "Rent Receipt Generator" }] },
     ],
   },
 ];
@@ -115,7 +116,13 @@ const Navbar: React.FC<NavbarProps> = ({ child = false }) => {
                         <ul className="space-y-3">
                           {option.items.map((item, i) => (
                             <li key={i} className="text-[14px] text-slate-700 hover:text-blue-600 hover:translate-x-1 transition-all cursor-pointer font-medium">
-                              {item}
+                              {item.href ? (
+                                <Link href={item.href}>
+                                  {item.name}
+                                </Link>
+                              ) : (
+                                <span>{item.name}</span>
+                              )}
                             </li>
                           ))}
                         </ul>
@@ -141,6 +148,7 @@ const Navbar: React.FC<NavbarProps> = ({ child = false }) => {
 
           {/* RIGHT ACTIONS */}
           <div className="flex items-center space-x-5">
+           
             <span className="hidden xl:block text-[14px] font-medium hover:text-blue-400 cursor-pointer transition">
               News & Guide
             </span>

@@ -14,13 +14,13 @@ export interface IProperty extends Document {
   pricePeriod?: "monthly" | "yearly" | "once";
 
   address: {
-    street: string;
-    city: string;
-    state: string;
-    zipCode: string;
-    location: {
-      type: "Point";
-      coordinates: [number, number];
+    street?: string;
+    city?: string;
+    state?: string;
+    zipCode?: string;
+    location?: {
+      type?: "Point";
+      coordinates?: [number, number];
     };
   };
 

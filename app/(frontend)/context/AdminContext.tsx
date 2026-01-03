@@ -9,7 +9,7 @@ interface Property {
   // Add other relevant property fields if needed for display
 }
 
-interface AdminData {
+export interface AdminData {
   _id: string;
   name: string;
   email: string;
@@ -22,6 +22,7 @@ interface AdminData {
   properties: Property[];
   propertySold: number;
   createdAt: string;
+  membership: "basic" | "advance" | "pro";
 }
 
 interface AdminContextType {

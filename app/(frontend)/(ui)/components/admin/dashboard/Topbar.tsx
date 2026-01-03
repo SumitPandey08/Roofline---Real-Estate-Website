@@ -5,10 +5,13 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { MdSearch, MdNotificationsNone, MdOutlineChatBubbleOutline, MdKeyboardArrowDown, MdPerson, MdLogout, MdVerified, MdWorkspacePremium } from 'react-icons/md';
 
-import { useAdmin } from '@/app/(frontend)/context/AdminContext';
+import { AdminData } from '@/app/(frontend)/context/AdminContext';
 
-const Topbar: React.FC = () => {
-    const { adminData, loading } = useAdmin();
+interface TopbarProps {
+    adminData: AdminData | null;
+}
+
+const Topbar: React.FC<TopbarProps> = ({ adminData }) => {
     const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
     const router = useRouter();
 

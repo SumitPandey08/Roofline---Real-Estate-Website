@@ -4,7 +4,7 @@ import SideBar from '@/app/(frontend)/(ui)/components/admin/dashboard/SideBar'
 import Topbar from '@/app/(frontend)/(ui)/components/admin/dashboard/Topbar'
 import { AdminProvider, useAdmin } from '@/app/(frontend)/context/AdminContext';
 
-function AddPropertyLayoutContent({ children }) {
+function AddPropertyLayoutContent({ children }: { children: React.ReactNode }) {
   const { adminData, loading } = useAdmin();
 
   if (loading) {
@@ -36,7 +36,7 @@ function AddPropertyLayoutContent({ children }) {
   );
 }
 
-export default function Layout({ children }) {
+export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <AdminProvider>
       <AddPropertyLayoutContent>{children}</AddPropertyLayoutContent>

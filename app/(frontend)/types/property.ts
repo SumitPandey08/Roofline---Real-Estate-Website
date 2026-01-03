@@ -1,7 +1,9 @@
 
 
+import mongoose from "mongoose";
+
 export interface PropertyDTO {
-  _id: string;
+  _id: string | mongoose.Types.ObjectId;
   title: string;
   images: string[];
   description: string;
@@ -11,17 +13,30 @@ export interface PropertyDTO {
   pricePeriod?: string;
 
   address: {
-    street: string;
-    city: string;
+    street?: string;
+    city?: string;
   };
+
+  propertyType:
+    | "apartment"
+    | "house"
+    | "condo"
+    | "land"
+    | "commercial"
+    | "office"
+    | "pg"
+    | "plot";
+
+  bedrooms?: number;
+  bathrooms?: number;
 
   area: number;
   areaUnit: string;
   yearBuilt?: number;
   amenities: string[];
-  createdAt: string;
+  createdAt: Date;
 
-  agent: AgentDTO; // ✅ populated agent
+  agent: AgentDTO | mongoose.Types.ObjectId; // ✅ populated agent or ObjectId
 }
 
 export interface AgentDTO {

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDataFromToken } from "../../../helpers/getDataFromToken";
 import User from "../../../models/user.model";
-import { connect } from "../../../dbConfig/dbConfig";
+import connect from "../../../dbConfig/dbConfig";
 
 connect();
 

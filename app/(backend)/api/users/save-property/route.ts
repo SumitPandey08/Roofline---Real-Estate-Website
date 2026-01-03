@@ -3,12 +3,16 @@ import { NextRequest, NextResponse } from "next/server";
 import { getDataFromToken } from "../../../helpers/getDataFromToken";
 import connect from "../../../dbConfig/dbConfig";
 import Property from "@/app/(backend)/models/property.model";
+import mongoose from "mongoose";
 
 connect();
 
 export async function POST(request: NextRequest) {
   try {
-    const userId = getDataFromToken(request);
+    const userId = await getDataFromToken(request);
+    if (!userId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
     const { propertyId } = await request.json();
 
     if (!propertyId) {
@@ -27,7 +31,7 @@ export async function POST(request: NextRequest) {
 
     // Add property to savedProperties if not already present
     if (!user.savedProperties.includes(propertyId)) {
-      property.savedBy.push(userId);
+      property.savedBy.push(userId as unknown as mongoose.Types.ObjectId);
       await property.save();
       user.savedProperties.push(propertyId);
       await user.save();

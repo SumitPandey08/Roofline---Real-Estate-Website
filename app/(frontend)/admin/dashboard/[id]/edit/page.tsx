@@ -36,21 +36,39 @@ const PropertyEditPage = () => {
 
   const handleAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, address: { ...formData.address, [name]: value } });
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      address: {
+        ...(prevFormData.address || {}), // Ensure address is an object
+        [name]: value,
+      },
+    }));
   };
 
   const handleLocationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    const coordinates = [...(formData.address?.location?.coordinates || [0, 0])];
-    name === 'longitude' ? (coordinates[0] = parseFloat(value)) : (coordinates[1] = parseFloat(value));
-    setFormData({ ...formData, address: { ...formData.address, location: { ...formData.address?.location, coordinates } } });
-  };
+    setFormData((prevFormData) => {
+      const currentCoordinates = prevFormData.address?.location?.coordinates || [0, 0];
+      const updatedCoordinates = [...currentCoordinates];
+      
+      if (name === 'longitude') {
+        updatedCoordinates[0] = parseFloat(value);
+      } else if (name === 'latitude') {
+        updatedCoordinates[1] = parseFloat(value);
+      }
 
-  const handleContactChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, contact: { ...formData.contact, [name]: value } });
+      return {
+        ...prevFormData,
+        address: {
+          ...(prevFormData.address || {}),
+          location: {
+            ...(prevFormData.address?.location || { type: "Point", coordinates: [0, 0] }),
+            coordinates: updatedCoordinates as [number, number],
+          },
+        },
+      };
+    });
   };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {

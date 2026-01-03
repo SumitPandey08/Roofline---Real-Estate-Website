@@ -12,6 +12,8 @@ export interface IUser extends Document {
   isPhoneVerified: boolean;
   phoneVerificationCode?: string;
   phoneVerificationCodeExpiry?: Date;
+  emailVerificationCode?: string;
+  emailVerificationCodeExpiry?: Date;
   forgotPasswordToken?: string;
   forgotPasswordTokenExpiry?: Date;
   verifyToken?: string;
@@ -62,6 +64,12 @@ const userSchema = new mongoose.Schema<IUser>(
       type: String,
     },
     phoneVerificationCodeExpiry: {
+      type: Date,
+    },
+    emailVerificationCode: {
+      type: String,
+    },
+    emailVerificationCodeExpiry: {
       type: Date,
     },
     forgotPasswordToken: {

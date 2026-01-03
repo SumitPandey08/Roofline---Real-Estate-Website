@@ -47,7 +47,7 @@ const Commercial: React.FC = async () => {
           </p>
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {commercialFeaturedProperties.map((property) => (
-              <Card key={property._id} data={property} />
+              <Card key={property._id.toString()} data={property} />
             ))}
           </div>
         </section>
@@ -59,8 +59,8 @@ const Commercial: React.FC = async () => {
         <p className="text-lg text-gray-600 mb-8">Shops in high demand</p>
 
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {commercialSale.map((property, index) => (
-            <Card key={index} data={property} />
+          {commercialSale.map((property) => (
+            <Card key={property._id.toString()} data={property} />
           ))}
         </div>
       </section>
@@ -71,8 +71,8 @@ const Commercial: React.FC = async () => {
         <p className="text-lg text-gray-600 mb-8">Shops in high demand</p>
 
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {commercialRent.map((property, index) => (
-            <Card key={index} data={property} />
+          {commercialRent.map((property) => (
+            <Card key={property._id.toString()} data={property} />
           ))}
         </div>
       </section>

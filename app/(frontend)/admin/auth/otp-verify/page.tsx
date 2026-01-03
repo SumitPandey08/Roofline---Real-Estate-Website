@@ -143,7 +143,7 @@ const OtpVerify = () => {
                             type="text"
                             maxLength={1}
                             value={digit}
-                            ref={(el) => (inputRefs.current[index] = el)}
+                            ref={(el) => { inputRefs.current[index] = el; }}
                             onChange={(e) => handleChange(e.target.value, index)}
                             onKeyDown={(e) => handleKeyDown(e, index)}
                             className="w-14 h-16 text-center text-2xl font-bold bg-white/80 border-2 border-purple-100 rounded-2xl focus:border-purple-500 focus:ring-4 focus:ring-purple-500/10 outline-none transition-all text-slate-800 shadow-inner"

@@ -9,6 +9,7 @@ cloudinary.config({
 
 interface CloudinaryResponse {
   url: string;
+  secure_url: string;
 }
 
 const uploadOnCloudinary = async (

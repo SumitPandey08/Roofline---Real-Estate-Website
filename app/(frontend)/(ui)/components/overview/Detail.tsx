@@ -2,6 +2,7 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { IProperty } from "@/app/(backend)/models/property.model";
+import { AgentDTO } from "@/app/(frontend)/types/property";
 
 interface DetailProps {
   property: IProperty | null;
@@ -94,9 +95,9 @@ const Detail: React.FC<DetailProps> = ({ property }) => {
               {property.agent && (
                 <div>
                   <span className="font-medium">Seller:</span>{" "}
-                  {typeof property.agent === "string"
-                    ? property.agent
-                    : property.agent.name}
+                  {property.agent && typeof property.agent === 'object' && 'name' in property.agent
+                    ? (property.agent as unknown as AgentDTO).name
+                    : "N/A"}
                 </div>
               )}
               <div>
@@ -122,12 +123,14 @@ const Detail: React.FC<DetailProps> = ({ property }) => {
             </div>
 
             <div className="flex gap-2">
-              <a
-                href={`mailto:${property.agent.email}`}
-                className="px-4 py-2 bg-blue-600 text-white rounded-md text-sm font-medium hover:bg-blue-700 transition"
-              >
-                Contact Agent
-              </a>
+              {property.agent && typeof property.agent === 'object' && 'email' in property.agent && (
+                <a
+                  href={`mailto:${(property.agent as unknown as AgentDTO).email}`}
+                  className="px-4 py-2 bg-blue-600 text-white rounded-md text-sm font-medium hover:bg-blue-700 transition"
+                >
+                  Contact Agent
+                </a>
+              )}
 
               {property.virtualTourUrl && (
                 <a

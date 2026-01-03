@@ -54,7 +54,7 @@ const Rent: React.FC = async () => {
             </p>
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {rentFeaturedProperties.map((property) => (
-                <Card key={property._id} data={property} />
+                <Card key={property._id.toString()} data={property} />
               ))}
             </div>
           </section>
@@ -71,7 +71,7 @@ const Rent: React.FC = async () => {
 
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {properties.map((property) => (
-              <Card key={property._id} data={property} />
+              <Card key={property._id.toString()} data={property} />
             ))}
           </div>
         </section>

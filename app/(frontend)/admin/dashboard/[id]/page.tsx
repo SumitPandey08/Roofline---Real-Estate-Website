@@ -23,7 +23,7 @@ import {
 
 const PropertyDetailsPage = () => {
   const { id } = useParams();
-  const [property, setProperty] = useState(null);
+  const [property, setProperty] = useState<IProperty | null>(null);
   const [loading, setLoading] = useState(true);
   const [users, setUsers] = useState({ savedBy: [], seenBy: [] });
   const [mainImage, setMainImage] = useState("");
