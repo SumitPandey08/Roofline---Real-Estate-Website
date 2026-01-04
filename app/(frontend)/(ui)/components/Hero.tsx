@@ -2,7 +2,7 @@
 
 import React, { useState, useMemo, useEffect } from "react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface PropertyType {
@@ -25,11 +25,28 @@ const locations = ["Indore", "Bhopal", "Mumbai", "Pune", "Bangalore"];
 
 const Hero: React.FC = () => {
   const router = useRouter();
+  const pathname = usePathname();
   const [currentLocation, setCurrentLocation] = useState<string>("Indore");
   const [activeType, setActiveType] = useState<string>("Buy");
+  const [searchQuery, setSearchQuery] = useState("");
   const [isFocused, setIsFocused] = useState(false);
 
+  useEffect(() => {
+    const match = propertyTypes.find((item) => item.route === pathname);
+    if (match) {
+      setActiveType(match.type);
+    }
+  }, [pathname]);
+
   const activeConfig = useMemo(() => propertyTypes.find((item) => item.type === activeType), [activeType]);
+
+  const handleSearch = () => {
+    const route = activeConfig?.route || "/";
+    const params = new URLSearchParams();
+    if (currentLocation) params.set("location", currentLocation);
+    if (searchQuery) params.set("q", searchQuery);
+    router.push(`${route}?${params.toString()}`);
+  };
 
   return (
     <div className="relative w-full h-[650px] lg:h-[750px] flex items-center justify-center overflow-hidden bg-slate-900">
@@ -103,7 +120,7 @@ const Hero: React.FC = () => {
           {propertyTypes.map((item) => (
             <button
               key={item.id}
-              onClick={() => setActiveType(item.type)}
+              onClick={() => router.push(item.route)}
               className={`relative px-6 py-2.5 text-sm font-bold transition-all duration-300 rounded-xl
                 ${activeType === item.type ? "text-blue-600" : "text-white/60 hover:text-white"}`}
             >
@@ -143,6 +160,9 @@ const Hero: React.FC = () => {
             <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
             <input
               type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleSearch()}
               onFocus={() => setIsFocused(true)}
               onBlur={() => setIsFocused(false)}
               placeholder="Enter Locality, Landmark, or Project Name..."
@@ -151,7 +171,11 @@ const Hero: React.FC = () => {
           </div>
 
           {/* CTA Button */}
-          <button className="w-full md:w-auto bg-slate-900 hover:bg-blue-600 text-white font-black px-10 py-4 rounded-2xl transition-all active:scale-95 shadow-xl">
+          <button 
+            type="button"
+            onClick={handleSearch}
+            className="w-full md:w-auto bg-slate-900 hover:bg-blue-600 text-white font-black px-10 py-4 rounded-2xl transition-all active:scale-95 shadow-xl"
+          >
             SEARCH
           </button>
         </motion.div>
