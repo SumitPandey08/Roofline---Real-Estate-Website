@@ -7,10 +7,9 @@ export async function fetchPropertyById(
 
   // ✅ Build absolute URL for SERVER
   const baseUrl =
-    process.env.NEXT_PUBLIC_SITE_URL ||
     process.env.VERCEL_URL
       ? `https://${process.env.VERCEL_URL}`
-      : "http://localhost:3000";
+      : process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
   const res = await fetch(`${baseUrl}/api/property/${id}`, {
     cache: "no-store",

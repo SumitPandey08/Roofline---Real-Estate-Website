@@ -35,7 +35,9 @@ async function fetchProperties(baseUrl: string): Promise<IProperty[]> {
 
 
 const Buy: React.FC = async () => {
-  const baseUrl = `${process.env.NEXT_PUBLIC_API_URL}`;
+  const baseUrl = process.env.VERCEL_URL
+    ? `https://${process.env.VERCEL_URL}`
+    : "http://localhost:3000";
 
   const properties = await fetchProperties(baseUrl);
   const featuredProperties = await fetchFeaturedProperties(baseUrl);
