@@ -7,9 +7,9 @@ import { MdCheckCircle } from "react-icons/md";
 
 const SignupSelectionPage = () => {
   const router = useRouter();
-  const [selected, setSelected] = useState(null);
+  const [selected, setSelected] = useState<string | null>(null);
 
-  const handleSelection = (type) => {
+  const handleSelection = (type: string) => {
     setSelected(type);
     // Slight delay for visual feedback before navigating
     setTimeout(() => {

@@ -1,6 +1,6 @@
 import connect from "@/app/(backend)/dbConfig/dbConfig";
 import Property from "@/app/(backend)/models/property.model";
-import User from "@/app/(backend)/models/user.model"; // ✅ REQUIRED
+import User from "@/app/(backend)/models/user.model"; // ✅ REQUIRED (even if not directly used, it registers the model)
 import { NextRequest, NextResponse } from "next/server";
 import mongoose from "mongoose";
 

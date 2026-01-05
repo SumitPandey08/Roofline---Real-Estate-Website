@@ -5,6 +5,13 @@ import Link from "next/link";
 import axios from "axios";
 import { toast, Toaster } from "react-hot-toast";
 import Image from "next/image";
+import { IAdmin } from "@/app/(backend)/models/admin.model";
+import { IProperty } from "@/app/(backend)/models/property.model";
+
+interface IPopulatedProperty extends Omit<IProperty, 'agent'> {
+  agent: IAdmin;
+}
+
 
 // React Icons Imports
 import { 
@@ -23,7 +30,7 @@ import {
 
 const PropertyDetailsPage = () => {
   const { id } = useParams();
-  const [property, setProperty] = useState<IProperty | null>(null);
+  const [property, setProperty] = useState<IPopulatedProperty | null>(null);
   const [loading, setLoading] = useState(true);
   const [users, setUsers] = useState({ savedBy: [], seenBy: [] });
   const [mainImage, setMainImage] = useState("");
@@ -138,14 +145,14 @@ const PropertyDetailsPage = () => {
                 </h2>
 
                 <div className="grid grid-cols-3 gap-2 border-y border-gray-50 py-6 mb-6">
-                    <StatBox icon={<MdOutlineBed size={22}/>} value={property.bedrooms} label="Beds" />
-                    <StatBox icon={<MdOutlineBathtub size={22}/>} value={property.bathrooms} label="Baths" />
+                    <StatBox icon={<MdOutlineBed size={22}/>} value={property.bedrooms || 0} label="Beds" />
+                    <StatBox icon={<MdOutlineBathtub size={22}/>} value={property.bathrooms || 0} label="Baths" />
                     <StatBox icon={<MdOutlineSquareFoot size={22}/>} value={property.area} label="Sqft" />
                 </div>
 
                 <div className="space-y-4 mb-8">
-                    <DetailRow label="Type" value={property.propertyType} />
-                    <DetailRow label="Year Built" value={property.yearBuilt} icon={<HiOutlineCalendar />} />
+                    <DetailRow label="Type" value={property.propertyType} icon={<HiOutlineViewGrid />} />
+                    <DetailRow label="Year Built" value={property.yearBuilt || "N/A"} icon={<HiOutlineCalendar />} />
                 </div>
 
                 {property.virtualTourUrl && (
@@ -163,7 +170,7 @@ const PropertyDetailsPage = () => {
                             <p className="text-[10px] text-purple-600 font-bold uppercase tracking-widest">Listing Agent</p>
                             <p className="text-sm font-bold text-gray-800">{property.agent.name}</p>
                             <p className="text-xs text-gray-400">{property.agent.email}</p>
-                            <p className="text-[10px] text-gray-400">ID: {property.agent._id}</p>
+                            <p className="text-[10px] text-gray-400">ID: {property.agent._id.toString()}</p>
                         </div>
                     </div>
                 )}
@@ -177,7 +184,7 @@ const PropertyDetailsPage = () => {
 };
 
 // Sub-components for cleaner structure
-const StatBox = ({ icon, value, label }) => (
+const StatBox = ({ icon, value, label }: { icon: React.ReactNode, value: string | number, label: string }) => (
     <div className="text-center">
         <div className="flex justify-center text-purple-500 mb-1">{icon}</div>
         <p className="text-lg font-bold text-gray-800">{value}</p>
@@ -185,14 +192,14 @@ const StatBox = ({ icon, value, label }) => (
     </div>
 );
 
-const DetailRow = ({ label, value, icon }) => (
+const DetailRow = ({ label, value, icon }: { label: string, value: string | number, icon: React.ReactNode }) => (
     <div className="flex justify-between items-center text-sm">
         <span className="text-gray-500 flex items-center gap-2">{icon} {label}</span>
         <span className="font-bold text-gray-800">{value}</span>
     </div>
 );
 
-const UserCard = ({ title, users, variant }) => (
+const UserCard = ({ title, users, variant }: { title: string, users: any[], variant: string }) => (
     <div className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm">
         <div className="flex justify-between items-center mb-4">
             <h4 className="font-bold text-gray-800">{title}</h4>

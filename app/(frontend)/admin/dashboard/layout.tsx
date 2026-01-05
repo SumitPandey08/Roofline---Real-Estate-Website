@@ -5,7 +5,12 @@ import SideBar from '@/app/(frontend)/(ui)/components/admin/dashboard/SideBar';
 import Topbar from '@/app/(frontend)/(ui)/components/admin/dashboard/Topbar';
 import { AdminProvider, useAdmin } from '@/app/(frontend)/context/AdminContext';
 
-function InnerDashboardLayout({ children }) {
+interface DashboardPageProps {
+    adminData?: any;
+    loading?: boolean;
+}
+
+function InnerDashboardLayout({ children }: { children: React.ReactNode }) {
     const { adminData, loading } = useAdmin();
 
     if (loading) {
@@ -25,7 +30,7 @@ function InnerDashboardLayout({ children }) {
                     {/* Pass adminData to children */}
                     {React.Children.map(children, child => {
                         if (React.isValidElement(child)) {
-                            return React.cloneElement(child, { adminData, loading });
+                            return React.cloneElement(child as React.ReactElement<DashboardPageProps>, { adminData, loading });
                         }
                         return child;
                     })}
@@ -35,7 +40,7 @@ function InnerDashboardLayout({ children }) {
     );
 }
 
-export default function DashboardLayout({ children }) {
+export default function DashboardLayout({ children }: { children: React.ReactNode }) {
     return (
         <AdminProvider>
             <InnerDashboardLayout>{children}</InnerDashboardLayout>

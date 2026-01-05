@@ -16,6 +16,7 @@ interface IUserProfile {
   seenProperties: string[];
   myReviews: string[];
   createdAt: string;
+  avatar?: string;
 }
 
 interface UserContextType {
@@ -24,6 +25,7 @@ interface UserContextType {
   loading: boolean;
   error: string | null;
   fetchUserData: () => Promise<void>;
+  updateUser: (updatedData: Partial<IUserProfile>) => Promise<void>;
 }
 
 export const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -38,7 +40,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     setLoading(true);
     setError(null);
     try {
-      const response = await axios.get("/api/users/get-profile"); 
+      const response = await axios.get("/api/users/get-profile");
       setUser(response.data.data);
     } catch (err: any) {
       setError(err.response?.data?.error || "Failed to fetch user data");
@@ -52,12 +54,25 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
+  const updateUser = async (updatedData: Partial<IUserProfile>) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await axios.put("/api/users/update-profile", updatedData);
+      setUser(response.data.data);
+    } catch (err: any) {
+      setError(err.response?.data?.error || "Failed to update user data");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     fetchUserData();
   }, []);
 
   return (
-    <UserContext.Provider value={{ user, setUser, loading, error, fetchUserData }}>
+    <UserContext.Provider value={{ user, setUser, loading, error, fetchUserData, updateUser }}>
       {children}
     </UserContext.Provider>
   );

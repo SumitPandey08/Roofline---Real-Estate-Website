@@ -5,7 +5,7 @@ import Navbar from '../../(ui)/components/Navbar';
 import Articles from "../../(ui)/components/Articles";
 import { UserProvider } from "../../context/UserContext";
 
-export default function BuyDetailLayout({ children }) {
+export default function BuyDetailLayout({ children }: { children: React.ReactNode }) {
   return (
     <UserProvider>
     <div className="w-full">

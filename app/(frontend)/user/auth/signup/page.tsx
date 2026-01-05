@@ -1,6 +1,5 @@
 "use client";
-
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -186,4 +185,12 @@ const SignUpPage = () => {
     );
 };
 
-export default SignUpPage;
+const SignUpPageWithSuspense = () => {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <SignUpPage />
+        </Suspense>
+    );
+};
+
+export default SignUpPageWithSuspense;

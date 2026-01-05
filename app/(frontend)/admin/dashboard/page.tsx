@@ -12,23 +12,9 @@ import ActivePropertyCard from "../../(ui)/components/admin/dashboard/ActiveProp
 
 import { useAdmin } from '@/app/(frontend)/context/AdminContext';
 
-interface Property {
-  _id: string;
-  title: string;
-  address: {
-    street: string;
-    city: string;
-    state: string;
-    zipCode: string;
-  };
-  images: string[];
-  propertyType: "apartment" | "house" | "condo" | "land" | "commercial";
-  price: number;
-  status: string;
-  bedrooms: number;
-  bathrooms: number;
-  area: number;
-}
+import { IProperty } from "@/app/(backend)/models/property.model";
+
+type PopulatedProperty = Omit<IProperty, '_id'> & { _id: string };
 
 interface DashboardStat {
   tittle: string;
@@ -36,7 +22,7 @@ interface DashboardStat {
   flowArr: number[];
   growth: number;
   description: string;
-  theme: string;
+  theme: 'purple' | 'blue' | 'green' | 'orange' | 'slate' | 'red';
 }
 
 interface Message {
@@ -50,7 +36,7 @@ interface Message {
 
 const DashboardPage: React.FC = () => {
   const { adminData, loading: adminLoading } = useAdmin();
-  const [properties, setProperties] = useState<Property[]>([]);
+  const [properties, setProperties] = useState<PopulatedProperty[]>([]);
   const [loading, setLoading] = useState(true);
 
 useEffect(() => {
@@ -125,6 +111,10 @@ useEffect(() => {
   // 3. Property Data (Bottom Row)
   const activeProperties = properties.filter((p) => p.status === "available");
   console.log(activeProperties);
+
+  const handleFeatureToggle = (id: string, isFeatured: boolean) => {
+    console.log(`Toggling feature for property ${id} to ${isFeatured}`);
+  };
 
   if (adminLoading || loading) {
     return <div>Loading...</div>;
@@ -206,18 +196,8 @@ useEffect(() => {
             activeProperties.map((data, index) => (
               <ActivePropertyCard
                 key={index}
-                data={{
-                  _id: data._id,
-                  title: data.title,
-                  address: data.address,
-                  propertyType: data.propertyType,
-                  price: data.price,
-                  images: data.images,
-                  status: data.status,
-                  bedrooms: data.bedrooms,
-                  bathrooms: data.bathrooms,
-                  area: data.area,
-                }}
+                data={data}
+                onFeatureToggle={handleFeatureToggle}
               />
             ))
           ) : (

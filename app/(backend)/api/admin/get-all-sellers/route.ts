@@ -2,7 +2,7 @@ import connect from "@/app/(backend)/dbConfig/dbConfig";
 import Admin from "@/app/(backend)/models/admin.model";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     await connect();
 

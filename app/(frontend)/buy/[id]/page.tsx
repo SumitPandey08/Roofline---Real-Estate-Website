@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import { IProperty } from "@/app/(backend)/models/property.model";
 import Detail from "@/app/(frontend)/(ui)/components/overview/Detail";
 import ImagesSlideShow from "@/app/(frontend)/(ui)/components/overview/ImagesSlideShow";
 import AgentCard from "@/app/(frontend)/(ui)/components/overview/AgentCard";
@@ -12,7 +13,7 @@ import {
 import { FaWhatsapp } from "react-icons/fa";
 
 import { fetchPropertyById } from "@/app/(frontend)/lib/property";
-import { PropertyDTO } from "@/app/(frontend)/types/property";
+import { PropertyDTO, AgentDTO } from "@/app/(frontend)/types/property";
 
 export default async function Page({
   params,
@@ -70,7 +71,7 @@ export default async function Page({
           </div>
 
           <div className="flex items-start">
-            <SavePropertyButton propertyId={property._id} />
+            <SavePropertyButton propertyId={property._id.toString()} />
           </div>
         </div>
       </section>
@@ -117,11 +118,13 @@ export default async function Page({
         {/* DETAILS + AGENT */}
         <section className="grid grid-cols-1 lg:grid-cols-3 gap-10">
           <div className="lg:col-span-2 bg-white rounded-3xl p-10 shadow-md border border-slate-100">
-            <Detail property={property} />
+            <Detail property={property as IProperty} />
           </div>
 
           <div className="lg:sticky lg:top-28 h-fit">
-            <AgentCard agent={property.agent} />
+            {property.agent && typeof property.agent === 'object' && 'name' in property.agent && (
+              <AgentCard agent={property.agent as AgentDTO} />
+            )}
           </div>
         </section>
 
@@ -158,10 +161,11 @@ export default async function Page({
       </main>
 
       {/* FLOATING ACTION BAR */}
+      {property.agent && typeof property.agent === 'object' && 'name' in property.agent && (
       <div className="fixed bottom-6 left-1/2 -translate-x-1/2 w-[92%] max-w-lg z-50">
         <div className="bg-white/90 backdrop-blur-xl border border-slate-200 shadow-2xl rounded-3xl px-4 py-3 flex gap-3">
           <a
-            href={`https://wa.me/${property.agent.phoneNo}`}
+            href={`https://wa.me/${(property.agent as AgentDTO).phoneNo}`}
             target="_blank"
             className="flex-1 bg-green-500 hover:bg-green-600 text-white py-3 rounded-2xl flex items-center justify-center gap-2 font-bold transition"
           >
@@ -169,13 +173,14 @@ export default async function Page({
             WhatsApp
           </a>
           <a
-            href={`mailto:${property.agent.email}`}
+            href={`mailto:${(property.agent as AgentDTO).email}`}
             className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-2xl text-center font-bold transition"
           >
             Contact Agent
           </a>
         </div>
       </div>
+      )}
     </div>
   );
 }

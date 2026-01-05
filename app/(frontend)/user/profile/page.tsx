@@ -139,7 +139,7 @@ const UserProfile: React.FC = () => {
                             <div className="mt-1 flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-transparent group-hover:border-gray-200 transition-colors">
                                 <span className="text-gray-800 font-medium truncate pr-2">{user.email}</span>
                                 <button 
-                                    onClick={() => handleCopy(user.email, 'email')}
+                                    onClick={() => handleCopy(user.email || '', 'email')}
                                     className="text-gray-400 hover:text-gray-900 p-1.5 rounded-md hover:bg-gray-200 transition-colors"
                                     title="Copy Email"
                                 >

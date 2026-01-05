@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { MdLocationOn, MdPeople, MdBarChart, MdChevronRight, MdBathroom, MdStar } from 'react-icons/md';
 import { IProperty } from '@/app/(backend)/models/property.model';
 
-export type PropertyCardData = IProperty;
+export type PropertyCardData = Omit<IProperty, '_id'> & { _id: string };
 
 interface ActivePropertyCardProps {
     data: PropertyCardData;
