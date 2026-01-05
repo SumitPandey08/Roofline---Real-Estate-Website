@@ -15,32 +15,71 @@ interface HighlightData {
   image: string;
 }
 
-async function fetchFeaturedProperties(baseUrl: string): Promise<IProperty[]> {
-  const res = await fetch(`${baseUrl}/api/property/get-featured-property`, { cache: 'no-store' });
-  if (!res.ok) {
-    throw new Error('Failed to fetch featured properties');
+async function fetchFeaturedProperties(): Promise<IProperty[]> {
+
+  try {
+
+    const res = await fetch(`/api/property/get-featured-property`, { cache: 'no-store' });
+
+    if (!res.ok) {
+
+      console.error("Failed to fetch featured properties", res.status, res.statusText);
+
+      throw new Error('Failed to fetch featured properties');
+
+    }
+
+    const result = await res.json();
+
+    return result.data;
+
+  } catch (error) {
+
+    console.error("Error in fetchFeaturedProperties", error);
+
+    throw error;
+
   }
-  const result = await res.json();
-  return result.data;
+
 }
 
-async function fetchProperties(baseUrl: string): Promise<IProperty[]> {
-  const res = await fetch(`${baseUrl}/api/property/get-all-property`, { cache: 'no-store' });
-  if (!res.ok) {
-    throw new Error('Failed to fetch properties');
+
+
+async function fetchProperties(): Promise<IProperty[]> {
+
+  try {
+
+    const res = await fetch(`/api/property/get-all-property`, { cache: 'no-store' });
+
+    if (!res.ok) {
+
+      console.error("Failed to fetch properties", res.status, res.statusText);
+
+      throw new Error('Failed to fetch properties');
+
+    }
+
+    const result = await res.json();
+
+    return result.data;
+
+  } catch (error) {
+
+    console.error("Error in fetchProperties", error);
+
+    throw error;
+
   }
-  const result = await res.json();
-  return result.data;
+
 }
+
 
 
 const Buy: React.FC = async () => {
-  const baseUrl = process.env.VERCEL_URL
-    ? `https://${process.env.VERCEL_URL}`
-    : "http://localhost:3000";
 
-  const properties = await fetchProperties(baseUrl);
-  const featuredProperties = await fetchFeaturedProperties(baseUrl);
+  const properties = await fetchProperties();
+
+  const featuredProperties = await fetchFeaturedProperties();
 
   const saleFeaturedProperties = featuredProperties.filter(p => p.listingType === 'sale');
 
