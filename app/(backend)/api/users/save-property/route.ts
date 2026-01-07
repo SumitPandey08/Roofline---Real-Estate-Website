@@ -9,11 +9,14 @@ connect();
 
 export async function POST(request: NextRequest) {
   try {
-    const userId = await getDataFromToken(request);
+    const userId = getDataFromToken(request);
     if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
     const { propertyId } = await request.json();
+
+    console.log("userId:", userId);
+    console.log("propertyId:", propertyId);
 
     if (!propertyId) {
       return NextResponse.json({ error: "Property ID is required" }, { status: 400 });
@@ -30,10 +33,10 @@ export async function POST(request: NextRequest) {
     }
 
     // Add property to savedProperties if not already present
-    if (!user.savedProperties.includes(propertyId)) {
-      property.savedBy.push(userId as unknown as mongoose.Types.ObjectId);
+    if (!user.savedProperties.map(String).includes(propertyId)) {
+      property.savedBy.push(userId as any);
       await property.save();
-      user.savedProperties.push(propertyId);
+      user.savedProperties.push(propertyId as any);
       await user.save();
     }
 
@@ -42,6 +45,7 @@ export async function POST(request: NextRequest) {
       data: user.savedProperties,
     });
   } catch (error: any) {
+    console.error("Error saving property:", error);
     return NextResponse.json({ error: error.message }, { status: 400 });
   }
 }

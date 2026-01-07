@@ -5,14 +5,15 @@ import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import { 
   MdHome, 
-  MdBusiness, 
+  MdBusiness,    // Used for Properties
+  MdApartment,   // Now used for Projects
   MdPeople, 
   MdAttachMoney, 
   MdBarChart, 
   MdSettings, 
   MdInfo, 
   MdAccountCircle, 
-  MdLogout 
+  MdLogout
 } from 'react-icons/md';
 import React from 'react';
 
@@ -38,6 +39,7 @@ const SideBar: React.FC = () => {
     const navItems: NavItem[] = [
         { name: 'Home', link: '/admin/dashboard/', icon: <MdHome size={24} /> },
         { name: 'Properties', link: '/admin/dashboard/properties', icon: <MdBusiness size={24} /> },
+        { name: 'Projects', link: '/admin/dashboard/projects', icon: <MdApartment size={24} /> },
         { name: 'Users', link: '/admin/dashboard/users', icon: <MdPeople size={24} /> },
         { name: 'Revenue', link: '/admin/dashboard/revenue', icon: <MdAttachMoney size={24} /> },
         { name: 'Statistics', link: '/admin/dashboard/statistics', icon: <MdBarChart size={24} /> },
@@ -51,8 +53,11 @@ const SideBar: React.FC = () => {
 
     // Style helper for the "Icon Container"
     const getLinkStyle = (link: string) => {
-        // Checks if the current path starts with the link to keep parent routes active
-        const isActive = pathname === link;
+        // Improved logic: ensures "Home" is only active on exact match, 
+        // while others stay active for sub-routes (e.g., /properties/add)
+        const isActive = link === '/admin/dashboard/' 
+            ? pathname === link 
+            : pathname.startsWith(link);
         
         return `group relative flex items-center justify-center w-12 h-12 rounded-xl transition-all duration-300 ${
             isActive 
@@ -67,7 +72,7 @@ const SideBar: React.FC = () => {
             {/* Logo Section */}
             <div className="mb-10">
                 <Image 
-                    src="/logo2.webp"  // Ensure this is in your /public folder
+                    src="/logo2.webp"
                     alt="Logo"
                     width={45}
                     height={45}

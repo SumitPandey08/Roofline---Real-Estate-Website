@@ -1,10 +1,9 @@
 import React from "react";
 import ResearchInsight from "@/app/(frontend)/(ui)/components/Research&Insight";
-import TopHightlight from "@/app/(frontend)/(ui)/components/TopHightlight";
 import Card from "@/app/(frontend)/(ui)/components/highdemand/Card";
 import SellProperty from "@/app/(frontend)/(ui)/components/SellProperty";
-
 import Seller from "@/app/(frontend)/(ui)/components/Seller";
+import TopProjects from "@/app/(frontend)/(ui)/components/TopProjects";
 import { IProperty } from "@/app/(backend)/models/property.model";
 
 interface HighlightData {
@@ -15,71 +14,36 @@ interface HighlightData {
   image: string;
 }
 
-async function fetchFeaturedProperties(): Promise<IProperty[]> {
-
+async function fetchFeaturedProperties(baseUrl: string): Promise<IProperty[]> {
   try {
-
-    const res = await fetch(`/api/property/get-featured-property`, { cache: 'no-store' });
-
+    const res = await fetch(`${baseUrl}/api/property/get-featured-property`, { cache: 'no-store' });
     if (!res.ok) {
-
-      console.error("Failed to fetch featured properties", res.status, res.statusText);
-
       throw new Error('Failed to fetch featured properties');
-
     }
-
     const result = await res.json();
-
     return result.data;
-
   } catch (error) {
-
-    console.error("Error in fetchFeaturedProperties", error);
-
     throw error;
-
   }
-
 }
 
-
-
-async function fetchProperties(): Promise<IProperty[]> {
-
+async function fetchProperties(baseUrl: string): Promise<IProperty[]> {
   try {
-
-    const res = await fetch(`/api/property/get-all-property`, { cache: 'no-store' });
-
+    const res = await fetch(`${baseUrl}/api/property/get-all-property`, { cache: 'no-store' });
     if (!res.ok) {
-
-      console.error("Failed to fetch properties", res.status, res.statusText);
-
       throw new Error('Failed to fetch properties');
-
     }
-
     const result = await res.json();
-
     return result.data;
-
   } catch (error) {
-
-    console.error("Error in fetchProperties", error);
-
     throw error;
-
   }
-
 }
-
-
 
 const Buy: React.FC = async () => {
-
-  const properties = await fetchProperties();
-
-  const featuredProperties = await fetchFeaturedProperties();
+  const baseUrl = `${process.env.NEXT_PUBLIC_API_URL}`;
+  const properties = await fetchProperties(baseUrl);
+  const featuredProperties = await fetchFeaturedProperties(baseUrl);
 
   const saleFeaturedProperties = featuredProperties.filter(p => p.listingType === 'sale');
 
@@ -101,6 +65,8 @@ const Buy: React.FC = async () => {
             </div>
           </section>
         )}
+
+        <TopProjects />
 
         <ResearchInsight />
 

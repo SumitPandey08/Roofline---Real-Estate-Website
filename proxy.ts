@@ -5,7 +5,7 @@ export function proxy(request: NextRequest) {
     const token = request.cookies.get('token')?.value || '';
 
     const isPublicPage = path.startsWith('/admin/auth');
-    const isPublicApi = ['/api/admin/login', '/api/admin/register', '/api/admin/phone-verify', '/api/admin/logout'].includes(path);
+    const isPublicApi = ['/api/admin/login', '/api/admin/register', '/api/admin/phone-verify', '/api/admin/logout', '/api/admin/get-all-sellers'].includes(path);
 
     // If logged in and trying to access a public page, redirect to dashboard
     if (token && isPublicPage) {

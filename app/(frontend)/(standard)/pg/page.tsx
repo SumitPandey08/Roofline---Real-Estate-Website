@@ -37,8 +37,9 @@ async function fetchProperties(baseUrl: string): Promise<IProperty[]> {
 const PG: React.FC = async () => {
 
 
-  const properties = await fetchProperties(`${process.env.NEXT_PUBLIC_API_URL}`);
-  const featuredProperties = await fetchFeaturedProperties(`${process.env.NEXT_PUBLIC_API_URL}`);
+  const baseUrl = `${process.env.NEXT_PUBLIC_API_URL}`;
+  const properties = await fetchProperties(baseUrl);
+  const featuredProperties = await fetchFeaturedProperties(baseUrl);
 
   const pgFeaturedProperties = featuredProperties.filter(p => p.propertyType === 'pg');
 
