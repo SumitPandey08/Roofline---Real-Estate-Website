@@ -256,7 +256,14 @@ export default function AddPropertyPage() {
                             name="isFurnished"
                             control={control}
                             render={({ field }) => (
-                                <input type="checkbox" {...field} className="h-5 w-5 rounded border-purple-300 text-purple-600 focus:ring-purple-500" />
+                                <input
+                                    type="checkbox"
+                                    checked={field.value}
+                                    onChange={field.onChange}
+                                    onBlur={field.onBlur}
+                                    ref={field.ref}
+                                    className="h-5 w-5 rounded border-purple-300 text-purple-600 focus:ring-purple-500"
+                                />
                             )}
                         />
                     </InputField>

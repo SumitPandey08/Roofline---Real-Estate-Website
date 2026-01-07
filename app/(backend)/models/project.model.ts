@@ -66,8 +66,8 @@ const ProjectSchema = new Schema<IProject>(
       type: Number, 
       required: true,
       validate: {
-        validator: function(this: IProject, value: number) {
-          return value >= this.startingPrice;
+        validator: function(value: number) {
+          return value >= (this as any).startingPrice;
         },
         message: "Ending price must be greater than or equal to starting price"
       }
@@ -98,8 +98,8 @@ const ProjectSchema = new Schema<IProject>(
       type: Number, 
       default: 0,
       validate: {
-        validator: function(this: IProject, value: number) {
-          return value <= this.projectUnits;
+        validator: function(value: number) {
+          return value <= (this as any).projectUnits;
         },
         message: "Sold units cannot exceed total project units"
       }
