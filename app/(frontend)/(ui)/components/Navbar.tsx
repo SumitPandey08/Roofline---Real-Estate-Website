@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import RightBar from "./RightBar";
+import { useRouter } from "next/navigation";
 
 /* ---------------- INTERFACES ---------------- */
 interface NavOption {
@@ -38,7 +39,7 @@ const centerNav: CenterNavItem[] = [
   {
     title: "For Sellers",
     options: [
-      { section: "List Property", items: [{ name: "Post Property Free", href: "/admin/add-property" }, { name: "Seller Plans & Pricing" }] },
+      { section: "List Property", items: [{ name: "Post Property Free" }, { name: "Seller Plans & Pricing" }] },
       { section: "Tools", items: [{ name: "Property Value Calculator" }, { name: "Seller Guide" }, { name: "Real Estate Trends" }] },
     ],
   },
@@ -54,6 +55,16 @@ const centerNav: CenterNavItem[] = [
 const Navbar: React.FC<NavbarProps> = ({ child = false }) => {
   const [navState, setNavState] = useState<"top" | "hidden" | "scrolled">("top");
   const [isRightBarOpen, setIsRightBarOpen] = useState<boolean>(false);
+  const router = useRouter();
+
+  const handlePostPropertyClick = () => {
+    const token = document.cookie.split('; ').find(row => row.startsWith('token='))?.split('=')[1];
+    if (token) {
+      router.push("/admin/add-property");
+    } else {
+      router.push("/admin/auth/login");
+    }
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -116,7 +127,9 @@ const Navbar: React.FC<NavbarProps> = ({ child = false }) => {
                         <ul className="space-y-3">
                           {option.items.map((item, i) => (
                             <li key={i} className="text-[14px] text-slate-700 hover:text-blue-600 hover:translate-x-1 transition-all cursor-pointer font-medium">
-                              {item.href ? (
+                              {item.name === "Post Property Free" ? (
+                                <button onClick={handlePostPropertyClick}>{item.name}</button>
+                              ) : item.href ? (
                                 <Link href={item.href}>
                                   {item.name}
                                 </Link>
@@ -153,7 +166,7 @@ const Navbar: React.FC<NavbarProps> = ({ child = false }) => {
               News & Guide
             </span>
 
-            <button className="relative group overflow-hidden bg-gradient-to-r from-rose-500 to-pink-600 px-5 py-2.5 rounded-full text-[14px] font-bold shadow-lg shadow-rose-500/30 hover:shadow-rose-500/50 transition-all active:scale-95">
+            <button onClick={handlePostPropertyClick} className="relative group overflow-hidden bg-gradient-to-r from-rose-500 to-pink-600 px-5 py-2.5 rounded-full text-[14px] font-bold shadow-lg shadow-rose-500/30 hover:shadow-rose-500/50 transition-all active:scale-95">
               <span className="relative z-10 flex items-center">
                 Post Property <span className="ml-2 text-[10px] bg-white/20 px-1.5 py-0.5 rounded uppercase tracking-tighter">Free</span>
               </span>
