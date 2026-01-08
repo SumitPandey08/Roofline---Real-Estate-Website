@@ -1,6 +1,8 @@
 import { NextResponse , NextRequest } from "next/server";
 import Project from "@/app/(backend)/models/project.model";
 import connect from "@/app/(backend)/dbConfig/dbConfig";
+import Admin from "@/app/(backend)/models/admin.model";
+import User from "@/app/(backend)/models/user.model";
 
 export async function GET(request: NextRequest) {
     try {

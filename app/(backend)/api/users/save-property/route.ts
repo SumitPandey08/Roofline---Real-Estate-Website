@@ -9,7 +9,7 @@ connect();
 
 export async function POST(request: NextRequest) {
   try {
-    const userId = getDataFromToken(request);
+    const userId = await getDataFromToken(request);
     if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
@@ -34,10 +34,14 @@ export async function POST(request: NextRequest) {
 
     // Add property to savedProperties if not already present
     if (!user.savedProperties.map(String).includes(propertyId)) {
-      property.savedBy.push(userId as any);
-      await property.save();
-      user.savedProperties.push(propertyId as any);
-      await user.save();
+      await Property.updateOne(
+        { _id: propertyId },
+        { $addToSet: { savedBy: userId } }
+      );
+      await User.updateOne(
+        { _id: userId },
+        { $addToSet: { savedProperties: propertyId } }
+      );
     }
 
     return NextResponse.json({

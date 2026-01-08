@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import Project from "@/app/(backend)/models/project.model";
 import { getDataFromToken } from "../../../helpers/getDataFromToken";
 import connect from "../../../dbConfig/dbConfig";
+import Admin from "@/app/(backend)/models/admin.model";
+import User from "@/app/(backend)/models/user.model";
 
 connect();
 
