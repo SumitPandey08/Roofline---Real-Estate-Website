@@ -1,5 +1,6 @@
 
 import mongoose, { Mongoose } from "mongoose";
+import { startMembershipCronJob } from "../helpers/cron.helper";
 
 let cached = (global as any).mongoose;
 
@@ -24,6 +25,7 @@ async function connect() {
     };
 
     cached.promise = mongoose.connect(MONGODB_URI, opts).then((mongoose) => {
+      startMembershipCronJob();
       return mongoose;
     });
   }

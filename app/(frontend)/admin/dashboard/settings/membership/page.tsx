@@ -4,6 +4,16 @@ import axios from 'axios';
 import { toast } from 'react-hot-toast';
 import { FaShieldAlt, FaBolt, FaCrown, FaCheckCircle, FaRocket } from 'react-icons/fa'; // React Icons
 import { MdVerified } from 'react-icons/md';
+import { loadStripe, Stripe } from '@stripe/stripe-js';
+import { Elements, PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js';
+import { useRouter, useSearchParams } from 'next/navigation';
+
+let stripePromise: Promise<Stripe | null>;
+if (process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY) {
+  stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
+} else {
+    console.error("Stripe public key is not set. Please set NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY in your .env.local file.");
+}
 
 interface UserData {
   membership: 'basic' | 'advance' | 'pro';
@@ -11,13 +21,68 @@ interface UserData {
   membershipLastDate: string;
 }
 
+const CheckoutForm = () => {
+  const stripe = useStripe();
+  const elements = useElements();
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setLoading(true);
+
+    if (!stripe || !elements) {
+      return;
+    }
+
+    const { error } = await stripe.confirmPayment({
+      elements,
+      confirmParams: {
+        return_url: `${window.location.origin}/admin/payment-success`,
+      },
+    });
+
+    if (error) {
+      setErrorMessage(error.message || "An unexpected error occured.");
+      setLoading(false);
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <PaymentElement />
+      <button type="submit" disabled={!stripe || loading} className="w-full mt-4 py-3 px-6 rounded-xl font-bold text-sm transition-all duration-200 bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:shadow-lg hover:from-blue-700 hover:to-indigo-700">
+        {loading ? "Processing..." : "Pay"}
+      </button>
+      {errorMessage && <div className="text-red-500 text-sm mt-2">{errorMessage}</div>}
+    </form>
+  );
+};
+
+
 export default function MembershipPage() {
   const [user, setUser] = useState<UserData | null>(null);
   const [loading, setLoading] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedPlan, setSelectedPlan] = useState("");
+  const [clientSecret, setClientSecret] = useState<string | null>(null);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
 
   useEffect(() => {
     fetchUserMembership();
-  }, []);
+    const status = searchParams.get('redirect_status');
+    if (status === 'succeeded') {
+      toast.success('Payment successful!');
+      router.replace('/admin/dashboard/settings/membership');
+      fetchUserMembership();
+    } else if (status === 'failed') {
+      toast.error('Payment failed. Please try again.');
+      router.replace('/admin/dashboard/settings/membership');
+    }
+  }, [searchParams, router]);
 
   const fetchUserMembership = async () => {
     try {
@@ -25,30 +90,26 @@ export default function MembershipPage() {
       setUser(res.data.data);
     } catch (error) {
       console.error("Failed to fetch membership data");
-      // Fallback for dev/demo if API fails
-      // setUser({ membership: 'basic', uploadCredit: 5, membershipLastDate: new Date().toISOString() });
     }
   };
 
-  const handleUpgrade = async (plan: string) => {
-    if (!confirm(`Are you sure you want to upgrade to ${plan}?`)) return;
-    
-    setLoading(true);
+  const handleUpgradeClick = async (plan: string) => {
+    if (!process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY) {
+        toast.error("Stripe is not configured correctly. Please contact support.");
+        return;
+    }
+    setSelectedPlan(plan);
     try {
-      const res = await axios.post('/api/admin/buy-premium', { membership: plan });
-      
-      if (res.data.success) {
-        toast.success(`Successfully upgraded to ${plan}!`);
-        fetchUserMembership(); 
-      } else if (res.data.url) {
-        window.location.href = res.data.url;
-      }
-    } catch (error: any) {
-      toast.error(error.response?.data?.error || "Upgrade failed");
-    } finally {
-      setLoading(false);
+        const { data } = await axios.post("/api/payment/create-payment-intent", {
+            plan,
+        });
+        setClientSecret(data.clientSecret);
+        setShowModal(true);
+    } catch (error) {
+        toast.error("Failed to create payment intent");
     }
   };
+  
 
   const plans = [
     {
@@ -96,6 +157,20 @@ export default function MembershipPage() {
   );
 
   return (
+    <>
+    {showModal && clientSecret && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center">
+          <div className="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-md">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">Upgrade to {selectedPlan}</h2>
+            <Elements stripe={stripePromise} options={{ clientSecret }}>
+              <CheckoutForm />
+            </Elements>
+            <button onClick={() => setShowModal(false)} className="w-full mt-4 py-3 px-6 rounded-xl font-bold text-sm transition-all duration-200 bg-gray-200 text-gray-500 hover:bg-gray-300">
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
     <div className="min-h-screen bg-gray-50 py-10 px-4 sm:px-6">
       <div className="max-w-6xl mx-auto">
         
@@ -193,7 +268,7 @@ export default function MembershipPage() {
 
                 <div className="p-8 pt-0 mt-auto">
                   <button
-                    onClick={() => !isCurrent && handleUpgrade(plan.id)}
+                    onClick={() => !isCurrent && handleUpgradeClick(plan.id)}
                     disabled={isCurrent || loading}
                     className={`
                       w-full py-3 px-6 rounded-xl font-bold text-sm transition-all duration-200
@@ -205,7 +280,7 @@ export default function MembershipPage() {
                       }
                     `}
                   >
-                    {isCurrent ? 'Current Plan' : loading ? 'Processing...' : 'Upgrade Now'}
+                    {isCurrent ? 'Current Plan' : 'Upgrade Now'}
                   </button>
                 </div>
               </div>
@@ -218,5 +293,6 @@ export default function MembershipPage() {
         </div>
       </div>
     </div>
+    </>
   );
 }
